@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  bike_name: MyString
+  bike_model_id: 
+  price: 9.99
+  bike_size: MyString
+
+two:
+  bike_name: MyString
+  bike_model_id: 
+  price: 9.99
+  bike_size: MyString

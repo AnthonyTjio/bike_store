@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Bike name:</strong>
+  <%= @product.bike_name %>
+</p>
+
+<p>
+  <strong>Bike model:</strong>
+  <%= @product.bike_model.bike_model_name %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @product.price %>
+</p>
+
+<p>
+  <strong>Bike size:</strong>
+  <%= @product.bike_size %>
+</p>
+
+<%= link_to 'Edit', edit_product_path(@product) %> |
+<%= link_to 'Back', products_path %>

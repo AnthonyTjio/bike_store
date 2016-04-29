@@ -1,0 +1,43 @@
+<%= form_for(@product) do |f| %>
+  <% if @product.errors.any? %>
+
+     <!-- Error Message -->
+     <div id="error_explanation">
+      <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+      <ul>
+      <% @product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+    <!-- Error Message -->
+
+  <% end %>
+
+  <div class="field">
+    <%= f.label :bike_name %><br>
+    <%= f.text_field :bike_name %>
+  </div>
+  <div class="field">
+    <%= f.label :bike_model_id %><br>
+    <!-- <%= f.text_field :bike_model_id %> -->         
+    <%= f.select :bike_model_id, options_from_collection_for_select(@models,"id","bike_model_name"), {include_blank: true}%>
+  </div>
+  <div class="field">
+    <%= f.label :price %><br>
+    <%= f.text_field :price %>
+  </div>
+  <div class="field">
+    <%= f.label :bike_size %><br> 
+    <%= f.select :bike_size, @size, {include_blank: true} %>
+  </div>
+  <div class="field">
+    <%= f.label :confirmation %><br>
+    <%= f.check_box(:confirmation) %>
+    <%= f.label "I Approve This User" %>
+  </div>  
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

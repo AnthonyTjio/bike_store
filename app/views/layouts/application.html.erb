@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BikeStore</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+	<ul>
+		<li><%= link_to "Home", home_index_path %></li>
+		<li><%= link_to "Login", home_login_path %></li>
+		<li><%= link_to "Customer", customers_path %></li>
+		<li><%= link_to "Bike Models", bike_models_path %></li>
+		<li><%= link_to "Order", orders_path %></li>
+		<li><%= link_to "Order Item", order_items_path %></li>
+		<li><%= link_to "Product", products_path %></li>
+		<li><%= link_to "Stock", stocks_path %></li>
+	</ul>
+
+
+<%= yield %>
+
+</body>
+</html>
