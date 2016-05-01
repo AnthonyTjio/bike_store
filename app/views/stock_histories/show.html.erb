@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Stock:</strong>
+  <%= @stock_history.stock %>
+</p>
+
+<p>
+  <strong>Alteration:</strong>
+  <%= @stock_history.alteration %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @stock_history.description %>
+</p>
+
+<%= link_to 'Edit', edit_stock_history_path(@stock_history) %> |
+<%= link_to 'Back', stock_histories_path %>

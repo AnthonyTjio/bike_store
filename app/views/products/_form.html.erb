@@ -21,7 +21,8 @@
   <div class="field">
     <%= f.label :bike_model_id %><br>
     <!-- <%= f.text_field :bike_model_id %> -->         
-    <%= f.select :bike_model_id, options_from_collection_for_select(@models,"id","bike_model_name"), {include_blank: true}%>
+
+    <%= f.select :bike_model_id, BikeModel.all.collect {|b| [b.bike_model_name, b.id ]}, {include_blank: true}%>
   </div>
   <div class="field">
     <%= f.label :price %><br>
@@ -32,10 +33,16 @@
     <%= f.select :bike_size, @size, {include_blank: true} %>
   </div>
   <div class="field">
-    <%= f.label :confirmation %><br>
-    <%= f.check_box(:confirmation) %>
-    <%= f.label "I Approve This User" %>
-  </div>  
+    <%= f.label :qty %><br>
+    <%= f.select :qty %><br>
+  </div>
+      <!-- 
+      <div class="field">
+        <%= f.label :confirmation %><br>
+        <%= f.check_box(:confirmation) %>
+        <%= f.label "I Approve This User" %>
+      </div>  
+      -->
 
   <div class="actions">
     <%= f.submit %>

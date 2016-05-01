@@ -5,13 +5,9 @@ class ProductsController < ApplicationController
   def constructor
     @size = %w[12 14 16 18 20 24 26 27]
     @models = BikeModel.all
-
-    @list_of_model = Array.new()
-
-    @models.each do |model| 
-      @list_of_model << model.bike_model_name
-    end
+    @qty = 0
   end
+
   # GET /products
   # GET /products.json
   def index
@@ -23,31 +19,52 @@ class ProductsController < ApplicationController
   def show
   end
 
+  def cek
+  end
+
   # GET /products/new
   def new
+    @qty = 0
+    @stock = Stock.new
     @product = Product.new
     
-    @confirmation = false
   end
 
   # GET /products/1/edit
   def edit
-    @confirmation = false
+    # @bike = @product[:bike_model_id]
   end
 
   # POST /products
   # POST /products.json
   def create
-    @product = Product.new(product_params)
+   @product = Product.new(product_params)
 
     respond_to do |format|
       if @product.save
-        format.html { redirect_to @product, notice: 'Product was successfully created.' }
-        format.json { render :show, status: :created, location: @product }
-      else
-        format.html { render :new }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
-      end
+
+        @stock = Stock.new 
+        
+        @stock.product_id = @product.id
+        @stock.qty = stock_params[:qty].to_i
+
+        if @stock.save
+        else
+          puts @stock.errors.full_messages
+        end
+
+        @stock_history = StockHistory.new
+        @stock_history.stock_id = @stock.id
+        @stock_history.alteration = @stock.qty
+        @stock_history.description = "Initial Stock"
+        @stock_history.save
+        
+          format.html { redirect_to @product, notice: 'Product was successfully created.' }
+          format.json { render :show, status: :created, location: @product }
+        else
+          format.html { render :new }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
+        end
     end
   end
 
@@ -56,7 +73,7 @@ class ProductsController < ApplicationController
   def update
     respond_to do |format|
       if @product.update(product_params)
-        format.html { redirect_to @product, notice: 'Product was successfully updated.' }
+        format.html { redirect_to request.referer, notice: 'Product was successfully updated.' }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit }
@@ -70,7 +87,7 @@ class ProductsController < ApplicationController
   def destroy
     @product.destroy
     respond_to do |format|
-      format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
+      format.html { redirect_to request.referer, notice: 'Product was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -79,6 +96,8 @@ class ProductsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_product
       @product = Product.find(params[:id])
+      @qty = 0
+      @stock = Stock.new
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -86,5 +105,9 @@ class ProductsController < ApplicationController
       # @bike_model_id = BikeModel.find_by(bike_model_name: :bike_model_id).id
 
       params.require(:product).permit(:bike_name, :bike_model_id, :price, :bike_size, :confirmation)
+    end
+
+    def stock_params
+      params.require(:stock).permit(:qty)
     end
 end

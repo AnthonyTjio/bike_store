@@ -1,0 +1,22 @@
+<h1>Inventory#check</h1>
+<p>Find me in app/views/inventory/check.html.erb</p>
+
+Product ID: <%= @product.id %> <br />
+Product Name: <%= @product.bike_name %> <br />
+Product Price: <%= @product.price %> <br />
+Product Size: <%= @product.bike_size %> <br />
+Product Qty: <%= @stock.qty %> <br />
+<br />
+History: <br />
+
+	<% @stock_histories.each do |stock_history| %>
+      <ul>
+      	<li> Created on: <%= stock_history.created_at %> </li>
+      	<li> Description: <%= stock_history.description %> </li>
+      	<li> Status: <%= stock_history.alteration>0 ? "In" : "Out" %>
+      	<li> Qty: <%= stock_history.alteration %> </li>
+
+      </ul>
+      <br />
+    <% end %>
+
