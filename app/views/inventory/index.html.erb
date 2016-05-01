@@ -1,0 +1,41 @@
+<h1>Product List</h1>
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Products</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Bike name</th>
+      <th>Bike model</th>
+      <th>Stock</th>
+      <th>Price</th>
+      <th>Bike size</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.id %></td>
+        <td><%= product.bike_name %></td>
+        <td><%= product.bike_model.bike_model_name %></td>
+        <td><%= Stock.find_by(product_id: product.id).qty %>
+        <td><%= product.price %></td>
+        <td><%= product.bike_size %></td>
+        <td><%= link_to 'Check', inventory_check_path(:id => product.id) %></td>
+        <td><%= link_to 'Add Qty', inventory_add_path(:id => product.id) %></td>
+        <td><%= link_to 'Revise Item', inventory_revise_path(:id => product.id) %></td>
+        <td><%= link_to 'Destroy', product, method: :delete%></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Product', new_product_path %>
+
+

@@ -1,4 +1,14 @@
 Rails.application.routes.draw do
+  resources :stock_histories
+  
+  get 'inventory/index'
+
+  get 'inventory/add'
+
+  get 'inventory/check'
+
+  get 'inventory/revise'
+
   get 'home/index'
   get 'home/login'
   get 'customers/index'
@@ -16,7 +26,10 @@ Rails.application.routes.draw do
   resources :customers
 
   root 'home#index', as: 'home'
+  post 'products/:id/cek' => 'products#cek'
+  get 'inventory/:id/check' => 'inventory#check'
 
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

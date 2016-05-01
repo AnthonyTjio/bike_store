@@ -15,6 +15,7 @@ class OrdersController < ApplicationController
   # GET /orders/new
   def new
     @order = Order.new
+    @customer = Customer.new
   end
 
   # GET /orders/1/edit
@@ -25,10 +26,21 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @order = Order.new(order_params)
+    @order.order_time = Time.new
 
+    if(customer_params[:id]==nil||customer_params[:id]=='') then 
+      @customer = Customer.new(customer_params)
+      @customer.save
+    else 
+      @customer = Customer.find(customer_params[:id])
+      @customer.update_attributes(customer_params)
+    end
+
+    @order.customer_id = @customer.id
     respond_to do |format|
       if @order.save
         format.html { redirect_to @order, notice: 'Order was successfully created.' }
+        format.html { redirect_to request.referer, notice: 'Order was successfully created.' }
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }
@@ -69,6 +81,10 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:customer_id, :order_date, :order_time, :status)
+      params.require(:order).permit(:order_date, :order_time, :status)
     end
+
+    def customer_params
+      params.require(:customer).permit(:id, :customer_name, :customer_address, :shipping_address, :customer_phone)
+    end  
 end
