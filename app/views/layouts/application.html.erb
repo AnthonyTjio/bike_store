@@ -13,11 +13,12 @@
 	-->
 	<ul>
 		<li><%= link_to "Home", home_index_path %></li>
-		<li><%= link_to "Login", home_login_path %></li> <!-- last -->
+		<li><%= link_to "Login", home_login_path %></li> <!-- Done -->
+		<li><%= link_to "Sign Up", home_signup_path %></li>
 		<li><%= link_to "Customer", customers_path %></li> <!-- Done -->
 		
 		<li><%= link_to "Order", orders_path %></li>  <!-- Done - Need Javascript for dynamic autofill -->
-		<li><%= link_to "Order Item", order_items_path %></li> <!-- 4 -->
+		<li><%= link_to "Order Item", order_items_path %></li> <!-- Done -->
 		
 		<div><b>Product</b></div> <!-- Checking still missing -->
 		<li><%= link_to "Product List", inventory_index_path %></li> <!-- Done -->
@@ -34,5 +35,6 @@
 
 <%= yield %>
 
+	<p id="notice"><%= notice %></p>
 </body>
 </html>

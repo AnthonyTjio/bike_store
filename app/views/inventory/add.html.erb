@@ -19,7 +19,7 @@
     <%= f.label :product %><br>         
     <select id="stock_history_product" name="stock_history[product]">
 
-        <option value=""></option>
+        <option value="">Select Product</option>
 
         <%= @products.each do |product| %>
           <option value="<%=product.id%>" 

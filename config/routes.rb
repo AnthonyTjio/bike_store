@@ -11,6 +11,11 @@ Rails.application.routes.draw do
 
   get 'home/index'
   get 'home/login'
+  get 'home/signup'
+  post 'home/authentication' => 'home#authentication'
+  post 'home/create' => 'home#create'
+  post 'home/logout' => 'home#logout'
+
   get 'customers/index'
   get 'orders/index'
   get 'order_items/index'
@@ -18,16 +23,26 @@ Rails.application.routes.draw do
   get 'products/index'
   get 'stocks/index'
 
+  get 'home/test' => 'home#test' 
+
   resources :order_items
   resources :orders
+  
+  resources :users
+
   resources :stocks
+  resources :stock_histories
+
   resources :products
   resources :bike_models
+  
   resources :customers
 
   root 'home#index', as: 'home'
   post 'products/:id/cek' => 'products#cek'
   get 'inventory/:id/check' => 'inventory#check'
+
+
 
   
   # The priority is based upon order of creation: first created -> highest priority.

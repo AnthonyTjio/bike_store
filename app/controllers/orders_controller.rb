@@ -10,6 +10,7 @@ class OrdersController < ApplicationController
   # GET /orders/1
   # GET /orders/1.json
   def show
+    @order_items = OrderItem.where(order_id: @order.id)
   end
 
   # GET /orders/new
@@ -20,6 +21,7 @@ class OrdersController < ApplicationController
 
   # GET /orders/1/edit
   def edit
+    @customer = Customer.find_by(id: @order.customer_id)
   end
 
   # POST /orders
@@ -40,7 +42,7 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.save
         format.html { redirect_to @order, notice: 'Order was successfully created.' }
-        format.html { redirect_to request.referer, notice: 'Order was successfully created.' }
+        # format.html { redirect_to request.referer, notice: 'Order was successfully created.' }
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }
@@ -52,8 +54,18 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
+    @order = Order.find_by(id: params[:id])
+    
+    @order.customer.shipping_address = update_customer_params[:shipping_address]
+    @order.customer.customer_phone = update_customer_params[:customer_phone]
+    @order.status = update_customer_params[:status]
+
     respond_to do |format|
-      if @order.update(order_params)
+      if @order.update_attributes(:status => update_customer_params[:status])
+        @order.customer.update_attributes(
+          :shipping_address => update_customer_params[:shipping_address], 
+          :customer_phone => update_customer_params[:customer_phone])
+
         format.html { redirect_to @order, notice: 'Order was successfully updated.' }
         format.json { render :show, status: :ok, location: @order }
       else
@@ -77,6 +89,9 @@ class OrdersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_order
       @order = Order.find(params[:id])
+      puts "====================================="
+      puts @order
+      puts "====================================="
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -86,5 +101,10 @@ class OrdersController < ApplicationController
 
     def customer_params
       params.require(:customer).permit(:id, :customer_name, :customer_address, :shipping_address, :customer_phone)
+    end  
+
+
+    def update_customer_params
+      params.require(:customer).permit(:id, :shipping_address, :customer_phone, :status)
     end  
 end
