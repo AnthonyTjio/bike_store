@@ -1,5 +1,5 @@
-<h1>Home#login</h1>
-<%= form_for @user, url: home_authentication_path do |f| %>
+<h1>Home#signup</h1>
+<%= form_for @user, url: home_create_path do |f| %>
 
 	<% if @user.errors.any? %>
     
@@ -28,6 +28,11 @@
 	<div class="field">
 		<%= f.label :password_confirmation %> <br />
 		<%= f.password_field :password_confirmation %> 
+	</div>
+
+	<div class="field">
+		<%= f.label :type %><br />
+		<%= f.select :type, @type %>
 	</div>
 
 	<div class="actions">

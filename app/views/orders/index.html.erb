@@ -16,12 +16,13 @@
   <tbody>
     <% @orders.each do |order| %>
       <tr>
-        <td><%= order.customer %></td>
+        <td><%= order.customer.customer_name %></td>
         <td><%= order.order_date %></td>
         <td><%= order.order_time %></td>
         <td><%= order.status %></td>
         <td><%= link_to 'Show', order %></td>
         <td><%= link_to 'Edit', edit_order_path(order) %></td>
+        <td><%= link_to 'New Order item', new_order_item_path(:orderID => order.id) %></td>
         <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

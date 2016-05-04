@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  stock_id: 
+  alteration: 1
+  description: MyText
+
+two:
+  stock_id: 
+  alteration: 1
+  description: MyText
