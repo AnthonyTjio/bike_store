@@ -1,5 +1,6 @@
 class OrderItemsController < ApplicationController
   before_action :set_order_item, only: [:show, :edit, :update, :destroy]
+  before_action :load_products, only: [:new, :edit]
 
   # GET /order_items
   # GET /order_items.json
@@ -14,27 +15,31 @@ class OrderItemsController < ApplicationController
 
   # GET /order_items/new
   def new
+    @order = Order.find_by(id: params[:orderID])
+
+    puts params[:orderID]
     @order_item = OrderItem.new
+    @order_item.order_id = @order.id
   end
 
   # GET /order_items/1/edit
   def edit
+
   end
 
   # POST /order_items
   # POST /order_items.json
   def create
     @order_item = OrderItem.new(order_item_params)
-
-    respond_to do |format|
-      if @order_item.save
-        format.html { redirect_to @order_item, notice: 'Order item was successfully created.' }
-        format.json { render :show, status: :created, location: @order_item }
-      else
-        format.html { render :new }
-        format.json { render json: @order_item.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @order_item.save
+          format.html { redirect_to @order_item, notice: 'Order item was successfully created.' }
+          format.json { render :show, status: :created, location: @order_item }
+        else
+          format.html { render :new }
+          format.json { render json: @order_item.errors, status: :unprocessable_entity }
+        end
       end
-    end
   end
 
   # PATCH/PUT /order_items/1
@@ -70,5 +75,9 @@ class OrderItemsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_item_params
       params.require(:order_item).permit(:product_id, :order_id, :qty)
+    end
+
+    def load_products
+      @products = Product.all
     end
 end

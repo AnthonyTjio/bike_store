@@ -1,24 +1,27 @@
+<!-- Show Order Details -->
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Customer:</strong>
-  <%= @order.customer %>
-</p>
+Order ID: <%= @order.id %> <br />
+Customer ID: <%= @order.customer.id %> <br />
+Customer Name: <%= @order.customer.customer_name %> <br />
+Shipping Address: <%= @order.customer.shipping_address %> <br />
+Contact Number: <%= @order.customer.customer_phone %> <br />
+Status: <%= @order.status %> <br />
 
-<p>
-  <strong>Order date:</strong>
-  <%= @order.order_date %>
-</p>
+	<% @order_items.each do |order_item| %>
+	<ul>
+		<li>Product Name: <%= order_item.product.bike_name %></li>
+		<li>Product Model: <%= order_item.product.bike_model.bike_model_name %></li>
+		<li>Product Size: <%= order_item.product.bike_size %></li>
+		<li>Qty: <%= order_item.qty %> <br />
+		<li><%= link_to 'Edit', edit_order_item_path(order_item) %></li>
+		<li><%= link_to 'Destroy', order_item, method: :delete, data: { confirm: 'Are you sure?' } %></li>
+	</ul>
 
-<p>
-  <strong>Order time:</strong>
-  <%= @order.order_time %>
-</p>
+	<% end %>
 
-<p>
-  <strong>Status:</strong>
-  <%= @order.status %>
-</p>
+<%= link_to 'Edit Order Details', edit_order_path(@order) %>
+<%= link_to 'New Order item', new_order_item_path(:orderID => @order.id) %>
 
-<%= link_to 'Edit', edit_order_path(@order) %> |
+
 <%= link_to 'Back', orders_path %>
