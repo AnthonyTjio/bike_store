@@ -19,7 +19,7 @@
     <select name="order_item[product_id]" id="order_item_product_id">
 
       <option value="">Select Bike</option>
-      <%= @products.each do |product| %>
+      <%= Product.all.each do |product| %>
 
       <option value="<%= product.id %>"
       <%= @order_item.product ? product.id.to_i==@order_item.product.id ? " selected" : "" : "" %>>

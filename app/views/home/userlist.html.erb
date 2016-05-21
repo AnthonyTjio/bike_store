@@ -1,0 +1,34 @@
+<!-- Update -->
+
+<h1>User List</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User ID</th>
+      <th>Username</th>
+      <th>Password</th>
+      <th>Password Salt</th>
+      <th>User type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.username %></td>
+        <td><%= user.password_hash %></td>
+        <td><%= user.password_salt %></td>
+        <td><%= user.type %></td>
+        <td><%= link_to 'Destroy', home_delete_path(:id => user.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Create User', home_signup_path %>
+<!-- Update -->

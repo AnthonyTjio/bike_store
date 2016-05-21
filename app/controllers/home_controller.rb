@@ -1,8 +1,12 @@
 class HomeController < ApplicationController
 
-  before_action :set_user, only: [:update]
+  before_action :set_user, only: [:update, :delete]
 
   def index
+  end
+
+  def userlist
+    @users = User.all
   end
 
   def signup
@@ -23,12 +27,15 @@ class HomeController < ApplicationController
   def authentication
   	# routes & view required
   	
-  	@user = User.authenticate(params[:username], params[:password])
+  	@user = User.authenticate(user_params[:username], user_params[:password])
 
   	if(@user) # if user found
   		session[:user_id] = @user.id
-  		redirect_to home_index_path
-  	else # if user not found
+      respond_to do |format|
+      format.html { redirect_to home_index_path }
+  		format.json { render json: @user }
+      end
+   	else # if user not found
   		redirect_to request.referer, :notice => "User not found!"
   	end
   end
@@ -38,9 +45,19 @@ class HomeController < ApplicationController
   	if(@user.save)
   		redirect_to request.referer, :notice => "New user created!"
   	else
-  		redirect_to request.referer, :notice => "Cannot create new user"
+  		redirect_to request.referer, :notice => @user.errors
   	end
   end
+
+  ######################### update ######################### 
+  def delete
+    @user.destroy
+    respond_to do |format|
+      format.html { redirect_to request.referer, notice: 'Product was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+  end
+  ######################### update ######################### 
 
   def test
   	
@@ -52,7 +69,7 @@ class HomeController < ApplicationController
   	end
 
   	def user_params
-  		params.require(:user).permit(:username, :password, :confirm_password, :type)
+  		params.require(:user).permit(:username, :password, :password_confirmation, :type)
   	end
 
 end

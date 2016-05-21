@@ -41,10 +41,7 @@
   </div>
   <% end %>
   
-  <div class="field">
-    <%= f.label :status %><br>
-    <%= f.text_field :status %>
-  </div>
+  <%= f.hidden_field(:status, :value => "Not Paid") %>
   <div class="actions">
     <%= f.submit %>
   </div>

@@ -12,7 +12,7 @@
       <th>Stock</th>
       <th>Price</th>
       <th>Bike size</th>
-      <th colspan="4"></th>
+      <th colspan="5"></th>
     </tr>
   </thead>
 
@@ -26,9 +26,10 @@
         <td><%= product.price %></td>
         <td><%= product.bike_size %></td>
         <td><%= link_to 'Check', inventory_check_path(:id => product.id) %></td>
+        <td><%= link_to 'Edit', edit_product_path(product) %></td>
         <td><%= link_to 'Add Qty', inventory_add_path(:id => product.id) %></td>
         <td><%= link_to 'Revise Item', inventory_revise_path(:id => product.id) %></td>
-        <td><%= link_to 'Destroy', product, method: :delete%></td>
+        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' }%></td>
       </tr>
     <% end %>
   </tbody>

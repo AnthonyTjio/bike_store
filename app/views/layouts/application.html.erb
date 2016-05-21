@@ -7,6 +7,7 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+	<% current_user %>
 	<!--
 		Fully Done -> No more
 		Done -> Need To be Edited
@@ -14,7 +15,10 @@
 	<ul>
 		<li><%= link_to "Home", home_index_path %></li>
 		<li><%= link_to "Login", home_login_path %></li> <!-- Done -->
+		<li><%= link_to "Logout", home_logout_path %></li> <!-- Done -->
 		<li><%= link_to "Sign Up", home_signup_path %></li>
+		<li><%= link_to "User List", home_userlist_path %></li>
+
 		<li><%= link_to "Customer", customers_path %></li> <!-- Done -->
 		
 		<li><%= link_to "Order", orders_path %></li>  <!-- Done - Need Javascript for dynamic autofill -->
@@ -31,10 +35,10 @@
 
 		
 	</ul>
-
+<p id="notice"><%= notice %></p>
 
 <%= yield %>
 
-	<p id="notice"><%= notice %></p>
+	
 </body>
 </html>

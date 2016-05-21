@@ -11,13 +11,22 @@ Rails.application.routes.draw do
 
   get 'home/index'
   get 'home/login'
+  get 'home/logout'
   get 'home/signup'
+  get 'home/userlist'
+
+  post 'home/authentication'
   post 'home/authentication' => 'home#authentication'
   post 'home/create' => 'home#create'
   post 'home/logout' => 'home#logout'
+  delete 'home/delete' => 'home#delete'
 
   get 'customers/index'
+
   get 'orders/index'
+  get 'orders/payment'
+  get 'orders/deliver'
+
   get 'order_items/index'
   get 'bike_models/index'
   get 'products/index'
