@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -13,8 +13,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-gem 'safe_attributes'
-gem 'protected_attributes'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -27,6 +25,21 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'bcrypt'
+
+gem 'safe_attributes'
+gem 'protected_attributes'
+gem 'angularjs-rails'
+
+gem 'bootstrap-sass', '~> 3.3.6'
+gem 'autoprefixer-rails'
+gem 'angular-ng-table-rails'
+
+# Gemfile
+source 'https://rails-assets.org' do
+  gem 'rails-assets-angular-ui-grid'
+  gem 'rails-assets-restangular'
+  # Additional rails-assets gems go here...
+end
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

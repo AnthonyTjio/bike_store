@@ -3,10 +3,15 @@ class HomeController < ApplicationController
   before_action :set_user, only: [:update, :delete]
 
   def index
+    @orders = Order.all
   end
 
   def userlist
     @users = User.all
+    respond_to do |format|
+      format.html
+      format.json { render json: @users }
+    end
   end
 
   def signup
@@ -32,8 +37,10 @@ class HomeController < ApplicationController
   	if(@user) # if user found
   		session[:user_id] = @user.id
       respond_to do |format|
-      format.html { redirect_to home_index_path }
-  		format.json { render json: @user }
+        format.html { redirect_to home_index_path }
+    		format.json { render json: @user }
+        flash.now[:notice] = @user.username || "Test"
+
       end
    	else # if user not found
   		redirect_to request.referer, :notice => "User not found!"
@@ -51,10 +58,11 @@ class HomeController < ApplicationController
 
   ######################### update ######################### 
   def delete
+    @user = User.find(params[:id])
     @user.destroy
     respond_to do |format|
       format.html { redirect_to request.referer, notice: 'Product was successfully destroyed.' }
-      format.json { head :no_content }
+      format.json { head :no_content, message: 'User was successfully deleted' }
     end
   end
   ######################### update ######################### 
@@ -69,7 +77,7 @@ class HomeController < ApplicationController
   	end
 
   	def user_params
-  		params.require(:user).permit(:username, :password, :password_confirmation, :type)
+  		params.require(:user).permit(:username, :password, :password_confirmation, :user_type)
   	end
 
 end

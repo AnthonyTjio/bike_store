@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Customer</th>
+      <th>Shipping Adress</th>
       <th>Order date</th>
       <th>Order time</th>
       <th>Status</th>
@@ -17,6 +18,7 @@
     <% @orders.each do |order| %>
       <tr>
         <td><%= order.customer.customer_name %></td>
+        <td><%= order.shipping_address %></td>
         <td><%= order.order_date %></td>
         <td><%= order.order_time %></td>
         <td><%= order.status %></td>
@@ -34,3 +36,57 @@
 <br>
 
 <%= link_to 'New Order', new_order_path %>
+
+<%= javascript_include_tag "angular/controller/orderController" %>
+
+<div ng-controller="orderController">
+  <h2> Add New Order </h2>
+  <input type="button" data-toggle="collapse" value="New Order" data-target="#addNewOrder"></br></br>
+  <form id="addNewOrder" class="collapse">
+     Customer ID: <input type="text" id="customerID"/></br></br>
+     Customer Name: <input type="text" id="customerName"/></br></br>
+     Order Date: <input type="date" id="orderDate"/></br></br>
+     Order Time: <input type="time" id="orderTime"/></br></br>
+     Status: <input type="checkbox" name="status" value="A"> A 
+             <input type="checkbox" name="status" value="B"> B</br></br>
+     <input type="submit" name="Submit" id="submitNewCustomer"></br></br>
+  </form>
+  <!-- table pertama -->  
+
+
+  <h2> New Orders </h2>
+  <!-- table pertama -->  
+  <div id="table-responsive-custom">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Shipping Adress</th>
+          <th>Shipping Method</th>
+          <th>Order date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody >
+        <form>
+          <tr ng-repeat="o in orders">
+            <td id="CustomerID" > {{o.customer.customer_name}} </td>
+            <td id="ShippingAddress" > {{o.shipping_address}} </td>
+            <td id="ShippingMethod" > {{o.shipping_method}} </td>
+            <td id="OrderDate" > {{o.order_time}} </td>
+            <td id="Status" > {{o.status}} </td>
+          <!-- <td> <button ng-click="edit(p.productBikeID);">Edit</button> </td>
+          <td > <input type="button" value="Save" class="saveBike" > </td>
+          <td> <input type="button" value="Delete" class="deleteBike"> </td> -->
+        </tr>
+      </form>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5" class="text-center">Data retrieved from database bike_store table bike_list</td>
+      </tr>
+    </tfoot>
+  </table>
+</div><!--end of .table-responsive-->
+</div>

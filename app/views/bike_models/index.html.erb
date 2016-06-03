@@ -1,3 +1,67 @@
+<%= javascript_include_tag "angular/controller/modelController" %>
+
+<div ng-controller="modelController">
+  <h2> Bike Models </h2>
+
+  <input type="button" data-toggle="collapse" value="New Model" data-target="#addNewModel"></br></br>
+  <form id="addNewModel" class="collapse">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+     Model Name: <input type="text" id="newModelName"/></br></br>
+     <input type="submit" name="Submit" id="submitNewModel"></br></br>
+  </form>
+
+  <div id="reviseData" style="display: none">
+    <h2> Revise Model </h2>
+    <form role="form" class="form-horizontal">
+
+      <input type="hidden" class="form-control" id="reviseModelID" placeholder="Enter Model ID" disabled>
+
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Model Name:</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="reviseModelName" placeholder="Enter Model Name">
+        </div>
+      </div>
+
+      <div class="form-group">        
+        <div class="col-sm-offset-2 col-sm-6">
+          <button type="button" id="buttonReviseModel" class="btn btn-default" onclick="editBikeModel()">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- table pertama -->  
+  <div id="table-responsive-custom">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>Model ID</th>
+          <th>Model Name</th>
+          <th colspan="1">Actions</th>
+        </tr>
+      </thead>
+      <tbody >
+        <form>
+          <tr ng-repeat="m in bike_models">
+            <td class="BikeModelID"> {{m.id}} </td>
+            <td class="BikeModelName"> {{m.bike_model_name}} </td>         
+            <td> 
+             <input type="button" value="Edit" class="viewProductDetail" onclick="editModelDetail(this)">
+            </td>
+        </tr>
+      </form>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="10" class="text-center">Data retrieved from database bike_store table bike_list</td>
+      </tr>
+    </tfoot>
+  </table>
+</div><!--end of .table-responsive-->
+</div>
+
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Bike Models</h1>

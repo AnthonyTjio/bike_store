@@ -1,3 +1,48 @@
+<%= javascript_include_tag "angular/controller/stockController" %>
+
+<div ng-controller="stockController">
+  <h2> Stocks </h2>
+  <!-- table pertama -->  
+  <div id="table-responsive-custom">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Bike name</th>
+          <th>Bike model</th>
+          <th>Stock</th>
+          <th>Price</th>
+          <th>Bike size</th>
+          <th colspan="4">Actions</th>
+        </tr>
+      </thead>
+      <tbody >
+        <form>
+          <tr ng-repeat="s in stocks">
+            <td id="CustomerID" > {{s.id}} </td>
+            <td id="ShippingAddress" > {{s.product.bike_name}} </td>
+            <td id="OrderDate" > {{s.product.bike_model.bike_model_name}} </td>
+            <td id="Status" > {{s.qty}} </td>
+            <td id="OrderDate" > {{s.product.price}} </td>
+            <td id="Status" > {{s.product.bike_size}} </td>          
+            <td> 
+             <input type="button" value="View Detail" class="viewProductDetail" onclick="viewProductDetail(this)">
+             <input type="button" value="Edit Price" class="editProduct" onclick="editProductData(this)" > 
+             <input type="button" value="Add Qty" class="inputProductStock" onclick="inputProductStock(this)" > 
+             <input type="button" value="Revise Stock" class="reviseProductStock" onclick="reviseProductStock(this)" >
+        </tr>
+      </form>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="10" class="text-center">Data retrieved from database bike_store table bike_list</td>
+      </tr>
+    </tfoot>
+  </table>
+</div><!--end of .table-responsive-->
+</div>
+
 <h1>Product List</h1>
 <p id="notice"><%= notice %></p>
 

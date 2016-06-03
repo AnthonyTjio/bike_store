@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   resources :stock_histories
   
   get 'inventory/index'
@@ -19,7 +20,8 @@ Rails.application.routes.draw do
   post 'home/authentication' => 'home#authentication'
   post 'home/create' => 'home#create'
   post 'home/logout' => 'home#logout'
-  delete 'home/delete' => 'home#delete'
+
+  delete 'home/delete/:id' => 'home#delete'
 
   get 'customers/index'
 

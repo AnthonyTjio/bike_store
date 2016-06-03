@@ -1,35 +1,97 @@
-<p id="notice"><%= notice %></p>
+<%= javascript_include_tag "angular/controller/customerController" %>
 
-<h1>Listing Customers</h1>
+<div ng-controller="customerController">
+  <h2> Add New Customer </h2>
+  <input type="button" data-toggle="collapse" value="New Customer" data-target="#addNewCustomer"></br></br>
+  <form id="addNewCustomer" class="collapse">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+     Customer Name: <input type="text" id="customerName"/></br></br>
+     Customer Address: <input type="text" id="customerAddress"/></br></br>
+     Customer Phone: <input type="text" id="customerPhone"/></br></br>
+     <input type="submit" name="Submit" id="submitNewCustomer"></br></br>
+  </form>
+  <!-- table pertama -->  
+   <div id="table-responsive-customer">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>Customer ID</th>
+          <th>Customer name</th>
+          <th>Customer address</th>
+          <th>Customer phone</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
+      <tbody ng-repeat="c in customers"> <!--kaya pake foreach ton -->
+        <tr>
+          <td class="CustomerID">{{c.id}}</td>
+          <td class="CustomerName">{{c.customer_name}}
+          <td class="CustomerAddress">{{c.customer_address}}</td>
+          <td class="CustomerPhone">{{c.customer_phone}}</td>
+          <td> <input type="button" value="Edit" class="editCustomer" onclick="showCustomerData(this)" > </td>
+          <td> <input type="button" value="Destroy" class="btn btn-primary btn-sm" class="destroyCustomer" data-toggle="modal" data-target="#deleteConfirm" onclick="console.log($(this).parent().parent().find('.CustomerID').html());changeDeleteId(this);" > </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" class="text-center">Data retrieved from database bike_store table customer</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div><!--end of .table-responsive-->
 
-<table>
-  <thead>
-    <tr>
-      <th>Customer ID</th>
-      <th>Customer name</th>
-      <th>Customer address</th>
-      <th>Shipping address</th>
-      <th>Customer phone</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <div id="reviseData" style="display: none">
+    <h2> Revise Bike List </h2>
+    <form role="form" class="form-horizontal">
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Customer ID:</label>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="reviseCustomerID" placeholder="Enter Customer ID" disabled>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Customer Name:</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="reviseCustomerName" placeholder="Enter Customer Name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Customer Address:</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="reviseCustomerAddress" placeholder="Enter Customer Address">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Phone:</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="reviseCustomerPhone" placeholder="Enter Phone">
+        </div>
+      </div>
+      <div class="form-group">        
+        <div class="col-sm-offset-2 col-sm-6">
+          <button type="button" id="buttonReviseCustomer" class="btn btn-default">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
 
-  <tbody>
-    <% @customers.each do |customer| %>
-      <tr>
-        <td><%= customer.id %></td>
-        <td><%= customer.customer_name %></td>
-        <td><%= customer.customer_address %></td>
-        <td><%= customer.shipping_address %></td>
-        <td><%= customer.customer_phone %></td>
-        <td><%= link_to 'Show', customer %></td>
-        <td><%= link_to 'Edit', edit_customer_path(customer) %></td>
-        <td><%= link_to 'Destroy', customer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+  <div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Delete Data</h4>
+        </div>
+        <div class="modal-body">
+          Are you Sure Want to Delete This Customer?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="deleteCustomer()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<br>
-
-<%= link_to 'New Customer', new_customer_path %>
+</div>

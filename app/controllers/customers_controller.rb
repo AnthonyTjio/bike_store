@@ -57,7 +57,7 @@ class CustomersController < ApplicationController
     @customer.destroy
     respond_to do |format|
       format.html { redirect_to customers_url, notice: 'Customer was successfully destroyed.' }
-      format.json { head :no_content }
+      format.json { head :no_content, message: 'Customer data successfully deleted', success: true }
     end
   end
 
@@ -69,6 +69,6 @@ class CustomersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
-      params.require(:customer).permit(:customer_name, :customer_address, :shipping_address, :customer_phone)
+      params.require(:customer).permit(:customer_name, :customer_address, :customer_phone)
     end
 end
