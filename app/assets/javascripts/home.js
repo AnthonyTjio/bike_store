@@ -18,15 +18,12 @@ function deleteUser(){
 			},
 
 			success: function (returnData) {
-				alert("data berhasil di delete!");
+				alert(returnData.message);
 				window.location.reload(true);
 
 			},error: function (statusText, jqXHR, returnText) {
-				console.log(statusText);
-				console.log(jqXHR);
-				console.log(returnText);
-			}, complete: function (data) {
-
+				//alert(statusText.responseText.message);
+				alert(JSON.parse(statusText.responseText).message);
 			}
 	});
 }
@@ -38,28 +35,31 @@ $(document).ready(function() {
 		var userPassword = $('#userPassword').val();  
 		var userConfirmPassword = $('#userConfirmPassword').val();
 		var userType = $('#userType').val();
-		alert(userUsername+" "+userPassword+" "+userConfirmPassword+" "+userType);
+
 		$.ajax({
 			url: localhost+"/home/create.json", //ke PHP nya
 			type: 'POST',
 			data: {
 				_method : "POST",
-				//authenticity_token : authenticityToken,
 				"user[username]" : userUsername,
 				"user[password]" : userPassword,
 				"user[password_confirmation]" : userConfirmPassword,
 				"user[user_type]" : userType
 			},
 			success: function (returnData) {
-				alert("data berhasil di input!");
+				alert(returnData.message);
 				window.location.reload(true);
 
 			},error: function (statusText, jqXHR, returnText) {
-			alert(statusText+" "+jqXHR+" "+returnText);
-				console.log(statusText);
-				console.log(jqXHR);
-				console.log(returnText);
-			}, complete: function (data) {
+				var errorMessage = JSON.parse(statusText.responseText).errors;
+
+				$.each(errorMessage, function(key, value) {
+				$('#create_user_' + key + '_header').attr("hidden", false);
+				$('#create_user_' + key + '_alert').html(value);
+			    console.log(key, value);
+				});
+
+				console.log(errorMessage);	
 			}
 		});
 	});

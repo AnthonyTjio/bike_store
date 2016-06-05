@@ -3,46 +3,29 @@
 <div ng-controller="customerController">
   <h2> Add New Customer </h2>
   <input type="button" data-toggle="collapse" value="New Customer" data-target="#addNewCustomer"></br></br>
-  <form id="addNewCustomer" class="collapse">
-    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-     Customer Name: <input type="text" id="customerName"/></br></br>
-     Customer Address: <input type="text" id="customerAddress"/></br></br>
-     Customer Phone: <input type="text" id="customerPhone"/></br></br>
+  <form id="addNewCustomer" class="collapse">    
+     Customer Name: <input type="text" id="customerName"/>
+     <span id="add_customer_name_header" style="color: red;" hidden>Customer Name </span>
+     <span id="add_customer_name_alert" style="color: red;"></span>
+     </br></br>
+     
+     Customer Address: <input type="text" id="customerAddress"/>
+     <span id="add_customer_address_header" style="color: red;" hidden>Customer Name </span>
+     <span id="add_customer_address_alert" style="color: red;"></span>
+     </br></br>
+
+     Customer Phone: <input type="text" id="customerPhone"/>
+     <span id="add_customer_phone_header" style="color: red;" hidden>Customer Phone </span>
+     <span id="add_customer_phone_alert" style="color: red;"></span>
+     </br></br>
+
      <input type="submit" name="Submit" id="submitNewCustomer"></br></br>
   </form>
-  <!-- table pertama -->  
-   <div id="table-responsive-customer">
-    <table summary="This table shows file inside database" class="table table-bordered table-hover">
-      <caption class="text-center">{{title}}</caption>
-      <thead>
-        <tr>
-          <th>Customer ID</th>
-          <th>Customer name</th>
-          <th>Customer address</th>
-          <th>Customer phone</th>
-          <th colspan="2"></th>
-        </tr>
-      </thead>
-      <tbody ng-repeat="c in customers"> <!--kaya pake foreach ton -->
-        <tr>
-          <td class="CustomerID">{{c.id}}</td>
-          <td class="CustomerName">{{c.customer_name}}
-          <td class="CustomerAddress">{{c.customer_address}}</td>
-          <td class="CustomerPhone">{{c.customer_phone}}</td>
-          <td> <input type="button" value="Edit" class="editCustomer" onclick="showCustomerData(this)" > </td>
-          <td> <input type="button" value="Destroy" class="btn btn-primary btn-sm" class="destroyCustomer" data-toggle="modal" data-target="#deleteConfirm" onclick="console.log($(this).parent().parent().find('.CustomerID').html());changeDeleteId(this);" > </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="5" class="text-center">Data retrieved from database bike_store table customer</td>
-        </tr>
-      </tfoot>
-    </table>
-  </div><!--end of .table-responsive-->
 
-  <div id="reviseData" style="display: none">
-    <h2> Revise Bike List </h2>
+  <!-- Update -->
+
+   <div id="reviseData" style="display: none">
+    <h2> Edit Customer Data </h2>
     <form role="form" class="form-horizontal">
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">Customer ID:</label>
@@ -53,28 +36,63 @@
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">Customer Name:</label>
         <div class="col-sm-6">          
-          <input type="text" class="form-control" id="reviseCustomerName" placeholder="Enter Customer Name">
+          <input type="text" class="form-control" id="reviseCustomerName" placeholder="Enter Customer Name" disabled>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">Customer Address:</label>
         <div class="col-sm-6">          
           <input type="text" class="form-control" id="reviseCustomerAddress" placeholder="Enter Customer Address">
+          <span id="revise_customer_address_header" style="color: red;" hidden>Customer Address</span>
+          <span id="revise_customer_address_alert" style="color: red;"></span>
         </div>
       </div>
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">Phone:</label>
         <div class="col-sm-6">          
           <input type="text" class="form-control" id="reviseCustomerPhone" placeholder="Enter Phone">
+          <span id="revise_customer_phone_header" style="color: red;" hidden>Customer Phone</span>
+          <span id="revise_customer_phone_alert" style="color: red;"></span>
         </div>
       </div>
       <div class="form-group">        
         <div class="col-sm-offset-2 col-sm-6">
-          <button type="button" id="buttonReviseCustomer" class="btn btn-default">Submit</button>
+          <button type="button" id="buttonReviseCustomer" class="btn btn-default" onclick="editCustomer()">Submit</button>
         </div>
       </div>
     </form>
   </div>
+
+
+  <!-- table pertama -->  
+   <div id="table-responsive-customer">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>Customer ID</th>
+          <th>Customer name</th>
+          <th>Customer address</th>
+          <th>Customer phone</th>
+          <th colspan="1"></th>
+        </tr>
+      </thead>
+      <tbody ng-repeat="c in customers"> <!--kaya pake foreach ton -->
+        <tr>
+          <td class="CustomerID">{{c.id}}</td>
+          <td class="CustomerName">{{c.customer_name}}
+          <td class="CustomerAddress">{{c.customer_address}}</td>
+          <td class="CustomerPhone">{{c.customer_phone}}</td>
+          <td> <input type="button" value="Edit" class="editCustomer" onclick="showCustomerData(this)" > </td>          
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" class="text-center">Data retrieved from database bike_store table customer</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div><!--end of .table-responsive-->
 
   <div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel">
     <div class="modal-dialog" role="document">

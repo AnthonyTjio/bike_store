@@ -4,15 +4,32 @@
   <h2> Add New User </h2>
   <input type="button" data-toggle="collapse" value="New User" data-target="#addNewUser"></br></br>
   <form id="addNewUser" class="collapse">
-    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-     User Name: <input type="text" id="userUsername"/></br></br>
-     Password: <input type="password" id="userPassword"/></br></br>
-     Confirm Password: <input type="password" id="userConfirmPassword"></br> </br>
+     User Name: <input type="text" id="userUsername"/>
+     <span id="create_user_username_header" style="color: red;" hidden>Username </span>
+     <span id="create_user_username_alert" style="color: red;"></span>
+
+     </br></br>
+     
+     Password: <input type="password" id="userPassword"/>
+     <span id="create_user_password_header" style="color: red;" hidden>Password </span>
+     <span id="create_user_password_alert" style="color: red;"></span>
+
+     </br></br>
+     Confirm Password: <input type="password" id="userConfirmPassword">
+     <span id="create_user_password_confirmation_header" style="color: red;" hidden>Password Confirmation </span>
+     <span id="create_user_password_confirmation_alert" style="color: red;"></span>
+
+     </br></br>
      User Type: 
        <select id="userType">
          <option value="User">User</option>
          <option value="Admin">Admin</option>
-       </select> </br></br>
+       </select>
+      <span id="create_user_user_type_header" style="color: red;" hidden>User type </span>
+      <span id="create_user_user_type_alert" style="color: red;"></span>
+
+     </br></br>
+
      <input type="submit" name="Submit" id="submitNewUser"></br></br>
   </form>
   <!-- table per

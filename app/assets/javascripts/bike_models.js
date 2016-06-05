@@ -20,8 +20,9 @@ function editBikeModel(){
 			window.location.reload(true);
 		},
 		error: function(statusText, jqXHR, returnText){
-			errorMessage = JSON.parse(statusText.responseText);
-			alert(errorMessage[0].message)
+			var modelNameErrorMessage = JSON.parse(statusText.responseText).errors;
+			$('#reviseModelNameAlert').html(modelNameErrorMessage);			
+			console.log(modelNameErrorMessage);
 
 		}
 	});
@@ -43,11 +44,8 @@ $(document).ready(function() {
 				window.location.reload(true);
 
 			},error: function (statusText, jqXHR, returnText) {
-				//var errors = $.parseJSON(returnText.responseText);
-				console.log(returnText);
-				console.log(JSON.parse(statusText.responseText));
-				var errorMessage = JSON.parse(statusText.responseText);
-				alert(errorMessage[0].message);
+				var errorMessage = JSON.parse(statusText.responseText)[0].message;
+				alert(errorMessage)
 			}
 		});
 	});

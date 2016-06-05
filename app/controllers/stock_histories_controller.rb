@@ -49,12 +49,12 @@ class StockHistoriesController < ApplicationController
            format.json { render :show, status: :created, location: @stock_history }
          else
            format.html { render :new }
-           format.json { render json: @stock_history.errors, status: :unprocessable_entity }
+           format.json { render json: {errors: @stock_history.errors }, status: :unprocessable_entity }
          end
 
       else
          format.html { render :new }
-         format.json { render json: @stock_history.errors, status: :unprocessable_entity }
+         format.json { render json: {errors: @stock.errors }, status: :unprocessable_entity }
       end    
      end
    end

@@ -42,7 +42,7 @@
     <%= f.label :bike_size %><br> 
     <%= f.select :bike_size, @size, {include_blank: true} %>
   </div>
-  <%= fields_for @stock do |s| %>
+  <%= fields_for (@stock) do |s| %>
       <%=s.label :qty %>
       <%=s.number_field :qty %>
    <% end %>

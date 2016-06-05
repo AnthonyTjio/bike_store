@@ -3,6 +3,7 @@ class Product < ActiveRecord::Base
   has_one :stock, dependent: :destroy
   validates :bike_name, :bike_model_id, :price, :bike_size, presence: true
   validates_uniqueness_of :bike_name, :scope => [:bike_size]
+  validates :price, numericality: {greater_than: 0}
   # validates :confirmation, acceptance: true
   # validates :bike_model_id
 end

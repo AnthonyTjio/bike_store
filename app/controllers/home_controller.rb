@@ -29,11 +29,22 @@ class HomeController < ApplicationController
   		redirect_to home_login_path
   end
 
+  def change_password    
+    respond_to do |format|
+      format.html{
+        @user=  User.find(session[:user_id]);
+      }
+      format.json {
+
+      }
+    end
+  end
+
   def authentication
   	# routes & view required
   	
   	@user = User.authenticate(user_params[:username], user_params[:password])
-
+    
   	if(@user) # if user found
   		session[:user_id] = @user.id
       respond_to do |format|
@@ -50,20 +61,30 @@ class HomeController < ApplicationController
   def create
   	@user = User.new(user_params)
   	if(@user.save)
-  		redirect_to request.referer, :notice => "New user created!"
+      respond_to do |format|
+        format.json { render json: {message: 'User successfully created!'}, status: :created }
+      end
   	else
-  		redirect_to request.referer, :notice => @user.errors
+      respond_to do |format|
+        format.json { render json: {errors: @user.errors }, status: :unprocessable_entity }
+      end  		
   	end
   end
 
   ######################### update ######################### 
   def delete
     @user = User.find(params[:id])
-    @user.destroy
-    respond_to do |format|
-      format.html { redirect_to request.referer, notice: 'Product was successfully destroyed.' }
-      format.json { head :no_content, message: 'User was successfully deleted' }
+    if(@user.user_type=="Admin")
+      respond_to do |format|        
+        format.json { render json: {message: 'Admin cannot be deleted'}, status: :forbidden }
+      end
+    else 
+      @user.destroy
+      respond_to do |format|      
+        format.json { render json: {message: 'User was successfully deleted'}, status: :accepted }
+      end
     end
+    
   end
   ######################### update ######################### 
 
@@ -77,7 +98,7 @@ class HomeController < ApplicationController
   	end
 
   	def user_params
-  		params.require(:user).permit(:username, :password, :password_confirmation, :user_type)
+  		params.require(:user).permit(:username, :old_password, :password, :password_confirmation, :user_type)
   	end
 
 end

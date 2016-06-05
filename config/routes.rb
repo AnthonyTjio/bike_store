@@ -2,13 +2,15 @@ Rails.application.routes.draw do
 
   resources :stock_histories
   
-  get 'inventory/index'
+  get 'inventory/index', as: 'inventory'
 
   get 'inventory/add'
 
   get 'inventory/check'
 
   get 'inventory/revise'
+  post 'inventory/product_history'
+
 
   get 'home/index'
   get 'home/login'
@@ -16,6 +18,8 @@ Rails.application.routes.draw do
   get 'home/signup'
   get 'home/userlist'
 
+  get 'home/change_password'
+  post 'home/change_password'
   post 'home/authentication'
   post 'home/authentication' => 'home#authentication'
   post 'home/create' => 'home#create'
@@ -51,7 +55,7 @@ Rails.application.routes.draw do
 
   root 'home#index', as: 'home'
   post 'products/:id/cek' => 'products#cek'
-  get 'inventory/:id/check' => 'inventory#check'
+  get 'inventory/check/:id' => 'inventory#check'
 
 
 

@@ -11,28 +11,32 @@ function changeDeleteId(customerRow){
 	delId = $(customerRow).parent().parent().find(".CustomerID").html();
 }
 
-function deleteCustomer(){
-	console.log(delId);
-	var customerID = delId;
+function editCustomer(){
+	var customerID = $('#reviseCustomerID').val();
+	var customerAddress = $('#reviseCustomerAddress').val();
+	var customerPhone = $('#reviseCustomerPhone').val();
 	$.ajax({
-		url: localhost+"/customers/"+customerID+".json", //ke PHP nya
-			type: 'POST',
-			data: {
-				_method: "delete"
-			},
+		url: localhost+"/customers/"+customerID+".json",
+		type: "POST",
+		data: {
+			_method: "PUT",
+			"customer[customer_address]" : customerAddress,
+			"customer[customer_phone]" : customerPhone
+		},
+		success: function(returnData){
+			alert(returnData.message);
+			window.location.reload(true);
+		},
+		error: function(statusText, jqXHR, returnText){
+			var errorMessage = JSON.parse(statusText.responseText).errors;
+			$.each(errorMessage, function(key, value) {
+				$('#revise_' + key + '_header').attr("hidden", false);
+				$('#revise_' + key + '_alert').html(value);
+			    console.log(key, value);
+			});
+			console.log(errorMessage);
+		}
 
-			success: function (returnData) {
-				alert("data berhasil di delete!");
-				window.location.reload(true);
-
-			},error: function (statusText, jqXHR, returnText) {
-				alert("error: "+statusText+" "+jqXHR);
-				console.log(statusText);
-				console.log(jqXHR);
-				console.log(returnText);
-			}, complete: function (data) {
-				console.log(data);
-			}
 	});
 }
 
@@ -53,15 +57,19 @@ $(document).ready(function() {
 				"customer[customer_phone]" : customerPhone
 			},
 			success: function (returnData) {
-				alert("data berhasil di input!");
+				alert(returnData.message);
 				window.location.reload(true);
 
 			},error: function (statusText, jqXHR, returnText) {
-			alert(statusText+" "+jqXHR+" "+returnText);
-				console.log(statusText);
-				console.log(jqXHR);
-				console.log(returnText);
-			}, complete: function (data) {
+				var errorMessage = JSON.parse(statusText.responseText).errors;
+				
+				$.each(errorMessage, function(key, value) {
+					$('#add_' + key + '_header').attr("hidden", false);
+					$('#add_' + key + '_alert').html(value);
+				    console.log(key, value);
+				});
+				
+				console.log(errorMessage);
 			}
 		});
 	});

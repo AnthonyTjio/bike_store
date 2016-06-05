@@ -39,33 +39,40 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
    @product = Product.new(product_params)
+   @qty = stock_params[:qty].to_i
 
-    respond_to do |format|
-      if @product.save
+   respond_to do |format|
 
-        @stock = Stock.new 
-        
-        @stock.product_id = @product.id
-        @stock.qty = stock_params[:qty].to_i
+      if(@product.save)
 
-        if @stock.save
-        else
-          puts @stock.errors.full_messages
-        end
-
+      @stock = Stock.new
+      @stock.product_id = @product.id
+      @stock.qty = @qty
+      
+      if(@stock.save)
         @stock_history = StockHistory.new
         @stock_history.stock_id = @stock.id
         @stock_history.alteration = @stock.qty
         @stock_history.description = "Initial Stock"
         @stock_history.save
-        
-          format.html { redirect_to @product, notice: 'Product was successfully created.' }
-          format.json { render :show, status: :created, location: @product }
-        else
-          format.html { render :new }
-          format.json { render json: @product.errors, status: :unprocessable_entity }
-        end
-    end
+
+      else
+        @product.delete
+        format.html { render :new }
+        format.json { render json: {errors: @stock.errors}, status: :unprocessable_entity }
+
+      end
+
+      format.html { redirect_to @product, notice: 'Product was successfully created.' }
+      format.json { render :show, status: :created, location: @product }
+     else
+
+      format.html { render :new }
+      format.json { render json: {errors: @product.errors}, status: :unprocessable_entity }
+     end
+
+
+    end 
   end
 
   # PATCH/PUT /products/1
@@ -77,7 +84,7 @@ class ProductsController < ApplicationController
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @product.errors}, status: :unprocessable_entity }
       end
     end
   end
@@ -104,7 +111,7 @@ class ProductsController < ApplicationController
     def product_params
       # @bike_model_id = BikeModel.find_by(bike_model_name: :bike_model_id).id
 
-      params.require(:product).permit(:bike_name, :bike_model_id, :price, :bike_size, :confirmation)
+      params.require(:product).permit(:bike_name, :bike_model_id, :price, :bike_size)
     end
 
     def stock_params
