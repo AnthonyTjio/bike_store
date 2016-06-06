@@ -64,3 +64,38 @@ $(document).ready(function() {
 		});
 	});
 });
+
+function changePassword(){
+	var username = $('#username').html();
+	var old_password = $('#changePasswordOldPassword').val();
+	var new_password = $('#changePasswordNewPassword').val();
+	var password_confirmation = $('#changePasswordPasswordConfirmation').val();
+
+	console.log(username+" "+old_password+" "+new_password+" "+password_confirmation);
+
+	$.ajax({
+		url: localhost+"/home/verify_change_password.json", //ke PHP nya
+		type: 'POST',
+		data: {
+			_method: 'POST',
+			'user[username]': username,
+			'user[old_password]': old_password,
+			'user[password]': new_password,
+			'user[password_confirmation]': password_confirmation
+		},
+
+		success: function (returnData) {
+			alert(returnData.message);
+			window.location.reload(true);
+
+		},error: function (statusText, jqXHR, returnText) {
+			var errorMessage = JSON.parse(statusText.responseText).errors;
+
+			$.each(errorMessage, function(key, value) {
+			$('#change_password_' + key + '_header').attr("hidden", false);
+			$('#change_password_' + key + '_alert').html(value);
+		    console.log(key, value);
+			});
+		}
+});
+}

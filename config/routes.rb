@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get 'home/userlist'
 
   get 'home/change_password'
-  post 'home/change_password'
+  post 'home/verify_change_password' => 'home#verify_change_password'
   post 'home/authentication'
   post 'home/authentication' => 'home#authentication'
   post 'home/create' => 'home#create'

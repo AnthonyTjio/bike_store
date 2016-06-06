@@ -4,8 +4,6 @@
   <h2> Inventory </h2>
   <input type="button" data-toggle="collapse" value="New Product" data-target="#addNewProduct"></br></br>
   <form id="addNewProduct" class="collapse">
-    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-     
      Bike Name: <input type="text" id="newProductName"/>
      <span id="new_product_bike_name_header" style="color: red;" hidden>Bike Name</span>
      <span id="new_product_bike_name_alert" style="color: red;"></span>

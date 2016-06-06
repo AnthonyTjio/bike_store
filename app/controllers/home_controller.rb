@@ -30,14 +30,43 @@ class HomeController < ApplicationController
   end
 
   def change_password    
-    respond_to do |format|
-      format.html{
-        @user=  User.find(session[:user_id]);
-      }
-      format.json {
+    @user=  User.find(session[:user_id])
+    
+  end
 
-      }
+  def verify_change_password
+    @user = User.authenticate(user_params[:username], user_params[:old_password])
+
+    @password = user_params[:password]
+    @password_confirmation = user_params[:password_confirmation]
+
+    if(@user)
+
+      if(@password == @password_confirmation)
+        
+        if (@user.update(user_params))
+          respond_to do |format|    
+            format.json { render json: {message: "password successfully updated!"}, status: :accepted  }
+          end
+        else
+          respond_to do |format|    
+            format.json { render json: {errors: @user.errors}, status: :unprocessable_entity  }
+          end
+        end
+
+      else
+        
+        respond_to do |format|    
+            format.json { render json: {errors: {password_confirmation: "password confirmation required!"}}, status: :unprocessable_entity  }
+        end
+      end
+      
+    else
+      respond_to do |format|
+        format.json { render json: {errors: {old_password: "doesn't match!"}}, status: :unprocessable_entity }      
+      end
     end
+    
   end
 
   def authentication

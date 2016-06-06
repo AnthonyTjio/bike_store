@@ -2,9 +2,10 @@ class User < ActiveRecord::Base
 	attr_accessor :old_password, :password, :password_confirmation
 
 	before_save :encrypt_password
+	before_update :encrypt_password
 
 	validates_confirmation_of :password
-	validates_presence_of :username, :user_type
+	validates_presence_of :username, :user_type, :old_password
 	validates_uniqueness_of :username, :case_sensitive => false
 	validates_length_of :password, :minimum => 6
 

@@ -100,7 +100,7 @@
             <!-- end side bar -->
 
             <!-- main area -->
-            <h1 id="welcome"> WELCOME <%= @current_user? @current_user.username : "Guest" %></H1>
+            <h1 id="welcome"> WELCOME <span id="username"><%= @current_user? @current_user.username : "Guest" %></span></H1>
             <%= notice %>
             <div id="mainArea" class="col-xs-12 col-sm-9">
                 <div class="col-xs-12">
