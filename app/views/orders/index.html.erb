@@ -20,7 +20,6 @@
         <td><%= order.customer.customer_name %></td>
         <td><%= order.shipping_address %></td>
         <td><%= order.order_date %></td>
-        <td><%= order.order_time %></td>
         <td><%= order.status %></td>
         <td><%= link_to 'Show', order %></td>
         <td><%= link_to 'Edit', edit_order_path(order) %></td>
@@ -46,7 +45,6 @@
      Customer ID: <input type="text" id="customerID"/></br></br>
      Customer Name: <input type="text" id="customerName"/></br></br>
      Order Date: <input type="date" id="orderDate"/></br></br>
-     Order Time: <input type="time" id="orderTime"/></br></br>
      Status: <input type="checkbox" name="status" value="A"> A 
              <input type="checkbox" name="status" value="B"> B</br></br>
      <input type="submit" name="Submit" id="submitNewCustomer"></br></br>
@@ -74,7 +72,6 @@
             <td id="CustomerID" > {{o.customer.customer_name}} </td>
             <td id="ShippingAddress" > {{o.shipping_address}} </td>
             <td id="ShippingMethod" > {{o.shipping_method}} </td>
-            <td id="OrderDate" > {{o.order_time}} </td>
             <td id="Status" > {{o.status}} </td>
           <!-- <td> <button ng-click="edit(p.productBikeID);">Edit</button> </td>
           <td > <input type="button" value="Save" class="saveBike" > </td>

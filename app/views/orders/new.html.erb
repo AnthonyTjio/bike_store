@@ -1,51 +1,58 @@
-<h1>New Order</h1>
-
-<%= form_for(@order) do |f| %>
-  <% if @order.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
-
-      <ul>
-      <% @order.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <%= fields_for @customer do |c| %>
-  <div class="field">
-    <%= c.label :id%><br />
-    <select id="customer_id" name="customer[id]">
+<script type="text/javascript">
+              $(function() {
+			    $("#productHistoryStartingDate" ).datepicker();
+			    $("#productHistoryEndingDate" ).datepicker();
+			  });
+</script>
+        
+<form id="addNewCustomer">    
+     Customer Name: 
+     <select id="orderCustomerID" onchange="findCustomerData()">
       <option value="">New Customer</option>
-        <%= Customer.all.each do |customer| %>
-          <option value="<%= customer.id%>"><%= customer.id %>. <%=customer.customer_name %></option>
-        <% end %>
+
+      <%= Customer.all.each do |customer| %>
+        <option value="<%= customer.id%>"><%= customer.id%> - <%= customer.customer_name%></option>
+      <% end %>
+
     </select>
-  </div>
-  <div class="field">
-    <%= c.label :customer_name%><br />
-    <%= c.text_field :customer_name%>
-  </div>
-  <div class="field">
-    <%= c.label :customer_address %><br>
-    <%= c.text_area :customer_address %>
-  </div>
-  <div class="field">
-    <%= c.label :shipping_address %><br>
-    <%= c.text_area :shipping_address %>
-  </div>
-  <div class="field">
-    <%= c.label :customer_phone %><br>
-    <%= c.text_field :customer_phone %>
-  </div>
-  <% end %>
+	   </br></br>
+     
+     Customer Name: <input type="text" id="orderCustomerName"/>
+     <span id="order_customer_name_header" style="color: red;" hidden>Customer Name </span>
+     <span id="order_customer_name_alert" style="color: red;"></span>
+     </br></br>
+     
+     Customer Address: <input type="text" id="orderCustomerAddress"/>
+     <span id="order_customer_address_header" style="color: red;" hidden>Customer Name </span>
+     <span id="order_customer_address_alert" style="color: red;"></span>
+     </br></br>
+
+     Customer Phone: <input type="text" id="orderCustomerPhone"/>
+     <span id="order_customer_phone_header" style="color: red;" hidden>Customer Phone </span>
+     <span id="order_customer_phone_alert" style="color: red;"></span>
+     </br></br>
+
+     <input type="submit" name="Submit" id="submitCustomerOrder" onclick="orderSetCustomerData()"></br></br>
+</form>
+
+<form id="addOrderItems">    
+    <input type="hidden" disabled id="orderItemOrderID"/>
+
+     Bike Name: 
+     <select id="orderItemProductID">
+      <%= Product.all.order(:bike_name).each do |product| %>
+        <option value="<%= product.id%>"><%= product.bike_name%></option>
+      <% end %>
+    </select>
+	</br></br>
+     
+     Qty: <input type="number" id="orderItemQty"/>
+     <span id="order_item_qty_header" style="color: red;" hidden>Qty </span>
+     <span id="order_item_qty_alert" style="color: red;"></span>
+     </br></br>
+
+     <input type="submit" name="Submit" id="submitCustomerOrder" onclick=""></br></br>
+  </form>
+
   
-  <%= f.hidden_field(:status, :value => "Not Paid") %>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
-
-
 <%= link_to 'Back', orders_path %>

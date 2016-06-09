@@ -1,11 +1,11 @@
 <%= javascript_include_tag "angular/controller/stockController" %>
+
+<script type="text/javascript">
+      $(function() {
+  $("#productHistoryStartingDate" ).datepicker();
+  $("#productHistoryEndingDate" ).datepicker();
+});
 </script>
-        <script type="text/javascript">
-              $(function() {
-			    $("#productHistoryStartingDate" ).datepicker();
-			    $("#productHistoryEndingDate" ).datepicker();
-			  });
-        </script>
 
 <div ng-controller="stockController">
 
@@ -193,7 +193,7 @@
   		Timestamp:      
 	        <input type="text" id="productHistoryStartingDate" placeholder="Enter Starting Date">
 	        to
-	        <input type="date" id="productHistoryEndingDate" placeholder="Enter Ending Date">
+	        <input type="text" id="productHistoryEndingDate" placeholder="Enter Ending Date">
 
 	        <button type="button" id="buttonGetProductHistory" onclick="getProductHistory()">Search</button>
 

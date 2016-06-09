@@ -11,20 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160602071148) do
+ActiveRecord::Schema.define(version: 20160609145217) do
 
   create_table "bike_models", force: :cascade do |t|
     t.string   "bike_model_name"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-  end
-
-  create_table "cash_flows", force: :cascade do |t|
-    t.integer  "cash_flow_type"
-    t.decimal  "amount"
-    t.text     "description"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
   end
 
   create_table "customers", force: :cascade do |t|
@@ -33,6 +25,16 @@ ActiveRecord::Schema.define(version: 20160602071148) do
     t.string   "customer_phone"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+  end
+
+  create_table "hellos", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "kucings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -50,12 +52,18 @@ ActiveRecord::Schema.define(version: 20160602071148) do
   create_table "orders", force: :cascade do |t|
     t.integer  "customer_id"
     t.date     "order_date"
-    t.time     "order_time"
-    t.string   "status"
+    t.integer  "status"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
     t.text     "shipping_address"
     t.integer  "shipping_method"
+    t.string   "receipt_number"
+    t.date     "shipping_date"
+    t.date     "payment_date"
+    t.integer  "payment_method"
+    t.string   "atm_account"
+    t.integer  "shipping_cost"
+    t.boolean  "paid"
   end
 
   add_index "orders", ["customer_id"], name: "index_orders_on_customer_id"
@@ -81,16 +89,6 @@ ActiveRecord::Schema.define(version: 20160602071148) do
 
   add_index "stock_histories", ["stock_id"], name: "index_stock_histories_on_stock_id"
 
-  create_table "stock_reports", force: :cascade do |t|
-    t.integer  "stock_id"
-    t.integer  "changes"
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "stock_reports", ["stock_id"], name: "index_stock_reports_on_stock_id"
-
   create_table "stocks", force: :cascade do |t|
     t.integer  "product_id"
     t.integer  "qty"
@@ -99,14 +97,6 @@ ActiveRecord::Schema.define(version: 20160602071148) do
   end
 
   add_index "stocks", ["product_id"], name: "index_stocks_on_product_id"
-
-  create_table "suppliers", force: :cascade do |t|
-    t.string   "supplier_name"
-    t.string   "supplier_address"
-    t.string   "supplier_telephone"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
 
   create_table "users", force: :cascade do |t|
     t.string   "username"

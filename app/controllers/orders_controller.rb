@@ -1,9 +1,10 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
   before_action :constructor
+  skip_before_filter  :verify_authenticity_token
 
   def constructor
-    @status = ["Not Paid", "Paid", "Sent"]
+    
   end
 
   # GET /orders
@@ -30,130 +31,40 @@ class OrdersController < ApplicationController
   end
 
   def payment
-    @order = Order.find_by(id: params[:id])
-
-    if(@order.set_paid==0)
-      @order.status = "Paid"
-      @order.save
-      # temporary'
-
-      @order = Order.find_by(id: params[:id])
-      @order_lists = OrderItem.where(order_id: params[:id])
-
-      @stocks = Array.new
-      @stock_histories = Array.new
-      @ok = 1
-
-      @order_lists.each do |item|
-        @stock = Stock.find_by(product_id: item.product_id)
-        @stock_history = StockHistory.new
-
-        @stock_history.stock_id = @stock.id
-        @stock_history.alteration = item.qty
-        @stock_history.description = "Purchased by "+@order.customer.customer_name+" on "+@order.created_at.to_s
-
-        @stock.qty -= item.qty
-
-        if(@stock.qty>=0)
-          @stocks.push(@stock)
-          @stock_histories.push(@stock_history)
-        else
-          @ok = 0
-          break
-        end
-      end
-
-      if(@ok==1)
-        @stocks.each do |stock|
-          stock.save
-        end  
-        @stock_histories.each do |stock_history|
-          stock_history.save
-        end
-        @order.status = "Paid"
-        @order.save
-        redirect_to orders_path, notice: 'Paid'
-      else
-        redirect_to request_referer, notice: 'Insufficient stock'
-      end
-      # temporary
-    end
+    
   end
 
   def deliver
-    @order = Order.find_by(id: params[:id])
-
-    #if(@order.set_sent==0)
     
-    if(@order.set_sent)
-    # temporary'
-
-      @order = Order.find_by(id: params[:id])
-      @order_lists = OrderItem.where(order_id: params[:id])
-
-      @stocks = Array.new
-      @stock_histories = Array.new
-      @ok = 1
-
-      @order_lists.each do |item|
-        @stock = Stock.find_by(product_id: item.product_id)
-        @stock_history = StockHistory.new
-
-        @stock_history.stock_id = @stock.id
-        @stock_history.alteration = item.qty * -1
-        @stock_history.description = "Purchased by "+@order.customer.customer_name+" on "+@order.created_at.to_s
-
-        @stock.qty -= item.qty
-
-        if(@stock.qty>=0)
-          @stocks.push(@stock)
-          @stock_histories.push(@stock_history)
-        else
-          @ok = 0
-          break
-        end
-      end
-
-      if(@ok==1)
-        @stocks.each do |stock|
-          stock.save
-        end  
-        @stock_histories.each do |stock_history|
-          stock_history.save
-        end
-        @order.status = "Delivered"
-        @order.save
-        redirect_to orders_path, notice: 'Delivered'
-      else
-        redirect_to request_referer, notice: 'Insufficient stock'
-      end
-    # temporary
-    end
   end
 
   # POST /orders
   # POST /orders.json
   def create
-    @order = Order.new(order_params)
-    @order.order_time = Time.new
-
-    if(customer_params[:id]==nil||customer_params[:id]=='')
-      @customer = Customer.new(customer_params)
-      @customer.save
-    else 
-      @customer = Customer.find(customer_params[:id])
-      @customer.update_attributes(customer_params)
+     ok = true
+     @customer = Customer.find_by_id(customer_params[:id])
+     if(@customer==nil)
+        respond_to do |format|
+          format.json { render json: {errors: "Customer not found"}, status: :unprocessable_entity }
+        end
     end
-
-    @order.customer_id = @customer.id
-    respond_to do |format|
-      if @order.save
-        format.html { redirect_to @order, notice: 'Order was successfully created.' }
-        # format.html { redirect_to request.referer, notice: 'Order was successfully created.' }
-        format.json { render :show, status: :created, location: @order }
-      else
-        format.html { redirect_to request.referer, notice: 'Insufficient stock'}
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+    puts "XXXXXXXXXXXXXXXXXXXXXX"
+    if(ok)
+      puts "YYYYYYYYYYYYYYYYYYYYY"
+      @order = Order.new()
+      @order.status = 0
+      puts @order.status
+      puts "ZZZZZZZZZZZZZZZZZZZZZZZZ"
+      @order.customer_id = @customer.id
+      
+      
+      
+      respond_to do |format|
+        if @order.save
+          format.json { render :show, status: :created, location: @order }
+        else
+          format.json {render json: {errors: @order.errors}, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -205,11 +116,11 @@ class OrdersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:order_date, :order_time, :status)
+      params.require(:order).permit(:order_date, :status)
     end
 
     def customer_params
-      params.require(:customer).permit(:id, :customer_name, :customer_address, :shipping_address, :customer_phone)
+      params.require(:customer).permit(:id, :customer_name, :customer_address, :customer_phone)
     end  
 
 

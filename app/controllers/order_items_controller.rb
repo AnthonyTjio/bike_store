@@ -19,7 +19,6 @@ class OrderItemsController < ApplicationController
 
     puts params[:orderID]
     @order_item = OrderItem.new
-    @order_item.order_id = @order.id
   end
 
   # GET /order_items/1/edit

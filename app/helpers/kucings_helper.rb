@@ -1,0 +1,2 @@
+module KucingsHelper
+end

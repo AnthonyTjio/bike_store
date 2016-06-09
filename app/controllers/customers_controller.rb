@@ -28,7 +28,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.save      
-        format.json { render json: {message: "New Customer Created!"}, status: :created}
+        format.json { render json: {message: "New Customer Created!", customer: @customer}, status: :created}
       else
 
         format.json { render json: {errors: @customer.errors}, status: :unprocessable_entity }

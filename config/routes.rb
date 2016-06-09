@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :kucings
   resources :stock_histories
   
   get 'inventory/index', as: 'inventory'
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
   get 'inventory/revise'
   post 'inventory/product_history'
 
+  get 'kucings/tikus'
 
   get 'home/index'
   get 'home/login'
