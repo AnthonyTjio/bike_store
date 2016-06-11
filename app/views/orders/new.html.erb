@@ -10,7 +10,6 @@
 
 <div id="NewOrderItem" ng-controller="NewOrderItemController" onload="getProductData()" >
     
-    <!-------------------------CUSTOMER-------------------------------> 
     <div class="row customer-section">
         <div class="col-md-2">
             
@@ -102,10 +101,7 @@
             </div>
         </div>
     </div>
-    
-    <!-----------------------END OF CUSTOMER-------------------------------> 
-        
-    <!-------------------------ITEM------------------------------->      
+
     <div class="row item-section">
         <div class="col-md-2">
                 
@@ -155,7 +151,7 @@
                             Qty: 
                         </div>
                         <div class="col-md-4 item-to-add">
-                            <input type="number" class="form-control" id="orderItemQty" minimum="1"/>
+                            <input type="number" class="form-control" id="orderItemQty"/>
                         </div>
                         <div class="col-md-6 item-to-add">
                             <span id="order_item_qty_header" style="color: red;" hidden>Qty </span>
@@ -180,7 +176,7 @@
                             
                         </div>
                         <div class="col-md-4 item-to-add">
-                          <input type="button" name="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart()">
+                          <input type="button" value="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart()">
                         </div>
                         <div class="col-md-6 item-to-add">
                            
@@ -233,9 +229,7 @@
             
         </div>
     </div>
-     <!---------------------------END OF ITEM----------------------->
-     
-     <!-------------------------PAYMENT------------------------------->      
+
     <div class="row payment-section">
         <div class="col-md-2">
                 

@@ -2,6 +2,8 @@ class OrderItemsController < ApplicationController
   before_action :set_order_item, only: [:edit, :update, :destroy]
   before_action :load_products, only: [:new, :update, :edit]
 
+  skip_before_filter :verify_authenticity_token
+
   # GET /order_items
   # GET /order_items.json
   def index
