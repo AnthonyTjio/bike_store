@@ -156,8 +156,8 @@ function orderSetCustomerData(){
 				 window.history.pushState('edit/'+returnData.id,'Title','../'+returnData.id+'/edit');
 				 //alert("TEST");
 			},
-			error: function(status,jqXHR,returnText){
-				console.log(status);
+			error: function(statusText,jqXHR,returnText){
+				console.log(JSON.parse(statusText.responseText).errors);
 				// var errorMessage = JSON.parse(returnText.responseText).errors;
 				// console.log(errorMessage);
 			}
@@ -227,11 +227,11 @@ function confirmOrder(){
 			"status": true
 		},
 		success: function(returnData){
-			alert(returnData);
+			alert("Success: "+returnData.message);	
 		},
 		error: function(statusText, jqXHR, returnText){
-			console.log(statusText+" "+returnText);
-			alert(statusText);
+			console.log(JSON.parse(statusText.responseText).message+" "+returnText);
+			alert("Error: "+JSON.parse(statusText.responseText).message);
 		}
 
 	});
