@@ -1,11 +1,14 @@
-class Order < ActiveRecord::Base
+ class Order < ActiveRecord::Base
   belongs_to :customer
   has_many :order_item, dependent: :destroy
   
+  before_create :set_initial_status
+  before_destroy :check_credentials
+  
   validates :customer_id, presence: true
   
-  enum status: [:pre_order, :active_order, :on_delivery, :done, :void]
-  enum shipping_method: [:on_the_spot, :company_delivery, :jne]
+  enum status: [:pre_order, :active_order, :finished, :cancelled]
+  enum shipping_method: [:on_the_spot, :delivery]
 
   accepts_nested_attributes_for :customer
 
@@ -50,6 +53,19 @@ class Order < ActiveRecord::Base
       errors.add(:message, "The order has not been delivered")
     end
   end
-    
-
+  
+  def self.cancel_order
+    if(User.find_by(id: session[user_id]).user_type == "Admin")
+      self.cancelled!
+    else
+      errors.add(:message, "Only admin can cancel orders!")
+    end
+  end
+  
+  def set_initial_status
+    self.is_paid = false
+    self.is_delivered = false
+    self.pre_order!
+  end 
+  
 end

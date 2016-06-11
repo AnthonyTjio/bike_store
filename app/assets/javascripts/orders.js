@@ -1,3 +1,19 @@
+function upToCustomerSection(){
+	$('html,body').animate({
+        scrollTop: $(".customer-section").offset().top},
+        'slow');
+}
+
+function upToItemSection(){
+	$('html,body').animate({
+        scrollTop: $(".customer-section").offset().top},
+        'slow');
+}
+
+function changeDeleteId(orderItemRow){
+	delId = $(orderItemRow).parent().parent().find(".OrderItemID").html();
+}
+
 function getEvent(e){
 	if(e.keyCode == 13){
 		findCustomerData();
@@ -32,6 +48,11 @@ function findCustomerData(){
 	});
 }
 
+function getCustomerDataByOrderID(){
+	var orderID = $('#orderItemOrderID').val();
+	
+}
+
 function checkCustomerData(){
 	var customerID = $('#orderCustomerID').val();
 	var answer = null;
@@ -50,16 +71,23 @@ function checkCustomerData(){
 }
 
 function orderSetCustomerData(){
+
 	var customerID = $('#orderCustomerID').val();
 	var customerName = $('#orderCustomerName').val();
 	var customerAddress = $('#orderCustomerAddress').val();  
 	var customerPhone = $('#orderCustomerPhone').val();
+	var orderID = $('#orderItemOrderID').val();
 	
 	var existence = false;
 	
 	if(customerID) existence = checkCustomerData();
 	var ok = false;
-	if(existence){ // kalo udah ada kita langsung proses
+	
+	if(orderID != 0){ // kalo udah ada order ID ga perlu dijalanin
+		alert(orderID)
+		ok = false;
+	}
+	else if(existence){ // kalo udah ada kita langsung proses
 		ok = true;
 	}
 	else{ // kalo belum ada, kita masukin DB dulu
@@ -79,7 +107,6 @@ function orderSetCustomerData(){
 				customerID = returnData.customer.id;
 				$('#orderCustomerID').append("<option value='"+customerID+"'>"+customerID+" - "+customerName+"</option>")
 				$('#orderCustomerID').val(customerID);
-
 			},error: function (statusText, jqXHR, returnText) {
 				var errorMessage = JSON.parse(statusText.responseText).errors;
 				
@@ -96,6 +123,14 @@ function orderSetCustomerData(){
 	}
 	
 	if(ok){
+		$(".item-section").css("display","block");
+		
+		// --------ANIMATION------------
+		$('html,body').animate({
+        scrollTop: $(".item-section").offset().top},
+        'slow');
+        // -------------------------------
+        
 		$.ajax({
 			url: localhost+"/orders.json",
 			type: 'POST',
@@ -109,6 +144,8 @@ function orderSetCustomerData(){
 			success: function(returnData){
 				//alert("Order Created!");
 				console.log(returnData);
+				 $('#orderItemOrderID').val(returnData.id);
+				 //alert("TEST");
 			},
 			error: function(status,jqXHR,returnText){
 				console.log(status);
@@ -117,10 +154,89 @@ function orderSetCustomerData(){
 			}
 		})
 	}
+
+}
+
+function getProductData(){
+	var productID = $("#orderItemproductID").val();
+	$.ajax({
+		url: localhost+"/products/"+productID+".json",
+		type: 'GET',
+		success: function(returnData){
+			var price = returnData.price;
+			
+			$("#orderItemPrice").val(price);
+			$("#orderItemQty").val("");
+			$("#orderItemTotalPrice").val("0");
+		},
+		error: function(status, jqXHR, returnText){
+			console.log(status);
+		}
+	});
+}
+
+function orderItemToCart(){
+	var orderID = $("#orderItemOrderID").val();
+	var productID = $("#orderItemProductID").val();
+	var qty = $("#orderItemQty").val();
+	var price = $("#orderItemPrice").val();
 	
+	// -------------JANGAN DIAPUS TON--------------
+	$(".payment-section").css("display","block");
+		
+		// --------ANIMATION------------
+		$('html,body').animate({
+        scrollTop: $(".payment-section").offset().top},
+        'slow');
+        // -------------------------------
+        
+    // -----------------------------------------------
+        
+	$.ajax({
+		url:localhost+"/order_items.json",
+		type: 'POST',
+		data: {
+			_method: "POST",
+			"order_item[order_id]": orderID,
+			"order_item[product_id]": productID,
+			"order_item[qty]": qty,
+			"order_item[price]": price
+			
+		},
+		success: function(returnData){
+			// update order items table
+			console.log(returnData);
+		},
+		error: function(status, jqXHR, returnText){
+			console.log(status);
+			var errorMessage = JSON.parse(statusText.responseText).errors;
+				
+			$.each(errorMessage, function(key, value) {
+				$('#order_item_' + key + '_header').attr("hidden", false);
+				$('#order_item_' + key + '_alert').html(value);
+			    console.log(key, value);
+			});
+		}
+	})
 	
-	
-	
+}
+
+function deleteOrderItem(){
+	var orderItemID = delId;
+	$.ajax({
+		url: localhost+"/order_items/"+orderItemID+".json",
+		type: "POST",
+		data: {
+			_method: "DELETE",
+		},
+		success: function(returnData){
+			// reload order items table
+		},
+		error: function(status, jqXHR, returnText){
+			console.log(status);
+		}
+		
+	});
 }
 
 var delId = "";

@@ -15,8 +15,8 @@ class OrderItemsController < ApplicationController
 
   # GET /order_items/new
   def new
-    @order = Order.find_by(id: params[:orderID])
-
+    @order = Order.find_by(id: params[:order_id])
+    @product = Product.find_by_id(params[:product_id])
     puts params[:orderID]
     @order_item = OrderItem.new
   end
@@ -32,11 +32,9 @@ class OrderItemsController < ApplicationController
     @order_item = OrderItem.new(order_item_params)
       respond_to do |format|
         if @order_item.save
-          format.html { redirect_to @order_item, notice: 'Order item was successfully created.' }
-          format.json { render :show, status: :created, location: @order_item }
+          format.json { render :show, status: :created}
         else
-          format.html { render :new }
-          format.json { render json: @order_item.errors, status: :unprocessable_entity }
+          format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity }
         end
       end
   end
@@ -74,7 +72,7 @@ class OrderItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_item_params
-      params.require(:order_item).permit(:product_id, :order_id, :qty)
+      params.require(:order_item).permit(:product_id, :order_id, :qty, :price)
     end
 
     def load_products

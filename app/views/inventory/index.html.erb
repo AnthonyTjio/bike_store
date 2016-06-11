@@ -23,7 +23,7 @@
       <span id="new_product_bike_model_id_alert" style="color: red;"></span>
       </br></br>
 
-     Price: <input type="number" id="newProductPrice"/>
+     Price: <input type="number" id="newProductPrice" minimum="1"/>
      <span id="new_product_price_header" style="color: red;" hidden>Bike Price</span>
      <span id="new_product_price_alert" style="color: red;"></span>
 
@@ -42,7 +42,7 @@
       <span id="new_product_bike_size_alert" style="color: red;"></span>
       </br></br>
 
-     Initial Qty: <input type="number" id="newProductInitialStock"/>
+     Initial Qty: <input type="number" id="newProductInitialStock"  minimum="0"/>
      <span id="new_product_qty_header" style="color: red;" hidden>Bike Price</span>
      <span id="new_product_qty_alert" style="color: red;"></span>
      </br></br>
@@ -74,7 +74,7 @@
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">New Stocks</label>
         <div class="col-sm-6">          
-          <input type="text" class="form-control" id="addQtyAdditionalStock" placeholder="Enter Additional Stock">
+          <input type="number" class="form-control" id="addQtyAdditionalStock" placeholder="Enter Additional Stock"  minimum="1">
         </div>
         <span id="add_qty_alteration_header" style="color: red;" hidden>New Stocks </span>
         <span id="add_qty_alteration_alert" style="color: red;"></span>
@@ -130,7 +130,7 @@
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">New Stocks</label>
         <div class="col-sm-6">          
-          <input type="text" class="form-control" id="reviseQtyAdditionalStock" placeholder="Enter Additional Stock">
+          <input type="number" class="form-control" id="reviseQtyAdditionalStock" placeholder="Enter Additional Stock"  minimum="1">
         </div>
         <span id="revise_qty_alteration_header" style="color: red;" hidden>New Stocks </span>
         <span id="revise_qty_alteration_alert" style="color: red;"></span>

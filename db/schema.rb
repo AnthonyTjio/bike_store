@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160609145217) do
+ActiveRecord::Schema.define(version: 20160610171637) do
 
   create_table "bike_models", force: :cascade do |t|
     t.string   "bike_model_name"
@@ -60,10 +60,8 @@ ActiveRecord::Schema.define(version: 20160609145217) do
     t.string   "receipt_number"
     t.date     "shipping_date"
     t.date     "payment_date"
-    t.integer  "payment_method"
-    t.string   "atm_account"
-    t.integer  "shipping_cost"
-    t.boolean  "paid"
+    t.boolean  "is_paid"
+    t.boolean  "is_delivered"
   end
 
   add_index "orders", ["customer_id"], name: "index_orders_on_customer_id"

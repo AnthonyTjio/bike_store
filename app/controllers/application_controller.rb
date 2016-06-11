@@ -13,11 +13,9 @@ class ApplicationController < ActionController::Base
         puts session[:user_id]
 
         @current_user = User.find(session[:user_id])
-        flash.now[:notice] = @current_user.username || "Test"
-
         
+        @current_user
   		else
-        puts "FUCK"
         if request.format.json?
         elsif (current_uri != home_login_path && current_uri != home_authentication_path)
             redirect_to home_login_path, :notice  => "Please Login First"               

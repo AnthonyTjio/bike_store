@@ -1,77 +1,72 @@
+<div ng-controller="orderController">
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Orders</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Customer</th>
-      <th>Shipping Adress</th>
-      <th>Order date</th>
-      <th>Order time</th>
-      <th>Status</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @orders.each do |order| %>
-      <tr>
-        <td><%= order.customer.customer_name %></td>
-        <td><%= order.shipping_address %></td>
-        <td><%= order.order_date %></td>
-        <td><%= order.status %></td>
-        <td><%= link_to 'Show', order %></td>
-        <td><%= link_to 'Edit', edit_order_path(order) %></td>
-        <td><%= link_to 'New Order item', new_order_item_path(:orderID => order.id) %></td>
-        <td><%= link_to 'Paid', orders_payment_path(:id => order.id) %></td>
-        <td><%= link_to 'Deliver', orders_deliver_path(:id => order.id) %></td>
-        <td><%= link_to 'Destroy', order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Order', new_order_path %>
+<button class="btn btn-info"><%= link_to 'New Order', new_order_path %></button>
 
 <%= javascript_include_tag "angular/controller/orderController" %>
 
-<div ng-controller="orderController">
-  <h2> Add New Order </h2>
-  <input type="button" data-toggle="collapse" value="New Order" data-target="#addNewOrder"></br></br>
-  <form id="addNewOrder" class="collapse">
-     Customer ID: <input type="text" id="customerID"/></br></br>
-     Customer Name: <input type="text" id="customerName"/></br></br>
-     Order Date: <input type="date" id="orderDate"/></br></br>
-     Status: <input type="checkbox" name="status" value="A"> A 
-             <input type="checkbox" name="status" value="B"> B</br></br>
-     <input type="submit" name="Submit" id="submitNewCustomer"></br></br>
-  </form>
-  <!-- table pertama -->  
+<!--<div ng-controller="orderController">-->
+<!--  <h2> Add New Order </h2>-->
+<!--  <input type="button" data-toggle="collapse" value="New Order" data-target="#addNewOrder"></br></br>-->
+<!--  <form id="addNewOrder" class="collapse">-->
+<!--     Customer ID: <input type="text" id="customerID"/></br></br>-->
+<!--     Customer Name: <input type="text" id="customerName"/></br></br>-->
+<!--     Order Date: <input type="date" id="orderDate"/></br></br>-->
+<!--     Status: <input type="checkbox" name="status" value="A"> A -->
+<!--             <input type="checkbox" name="status" value="B"> B</br></br>-->
+<!--     <input type="submit" name="Submit" id="submitNewCustomer"></br></br>-->
+<!--  </form>-->
+ 
 
 
-  <h2> New Orders </h2>
+  <h2> Order List </h2>
+  <form>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon"><i class="fa fa-search"></i></div>
+      <input type="text" class="form-control" placeholder="Search Everything Here" ng-model="searchCustomer">
+    </div>      
+  </div>
+</form>
+
   <!-- table pertama -->  
   <div id="table-responsive-custom">
     <table summary="This table shows file inside database" class="table table-bordered table-hover">
       <caption class="text-center">{{title}}</caption>
       <thead>
         <tr>
-          <th>Customer</th>
-          <th>Shipping Adress</th>
-          <th>Shipping Method</th>
-          <th>Order date</th>
-          <th>Status</th>
+          <th>
+            <a ng-click="sortType = 'id'; sortReverse = !sortReverse">
+            Order ID <span ng-show="sortType == '' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'id' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'id' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'customer.customer_name'; sortReverse = !sortReverse">
+            Customer 
+            <span ng-show="sortType == 'customer.customer_name' && !sortReverse" class="fa fa-caret-down"></span>
+            <span ng-show="sortType == 'customer.customer_name' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th> 
+          <th>
+            Paid Status
+          </th>
+          <th>Shipping Status</th>
+          <th>State</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody >
         <form>
-          <tr ng-repeat="o in orders">
-            <td id="CustomerID" > {{o.customer.customer_name}} </td>
-            <td id="ShippingAddress" > {{o.shipping_address}} </td>
-            <td id="ShippingMethod" > {{o.shipping_method}} </td>
+          <tr ng-repeat="o in orders | orderBy:sortType:sortReverse | filter:searchCustomer " >
+            <td id="CustomerID" > {{o.id}} </td>
+            <td id="CustomerName" > {{o.customer.customer_name}} </td>
+            <td id="ShippingAddress" > {{o.is_paid}} </td>
+            <td id="ShippingMethod" > {{o.is_delivered}} </td>
             <td id="Status" > {{o.status}} </td>
           <!-- <td> <button ng-click="edit(p.productBikeID);">Edit</button> </td>
           <td > <input type="button" value="Save" class="saveBike" > </td>
