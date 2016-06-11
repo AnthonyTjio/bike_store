@@ -12,6 +12,35 @@ function viewProductDetail(element){
 	*/
 }
 
+// -----------FOR ADDING AN ITEM--------------
+var currentQty = '';
+var currentQtyInt = '';
+var additionalQty = '';
+var additionalQtyInt = '';
+var totalQty = ''
+// -------------------------------------------
+
+// ------------FOR REVISE AN ITEM-------------
+var lossStock = '';
+var currStock = '';
+var newStock = '';
+// -------------------------------------------
+function calculateTotalQty(){
+	currentQtyInt = parseInt(currentQty);
+	additionalQty = $("#addQtyAdditionalStock").val();
+	additionalQtyInt = parseInt(additionalQty);
+	totalQty = additionalQtyInt + currentQtyInt;
+	console.log(totalQty);
+	$("#addQtyTotalStock").val(totalQty);
+}
+
+function calculateNewStock() {
+	currStock = parseInt($("#reviseQtyCurrentStock").val());
+	lossStock = parseInt($("#reviseQtyAdditionalStock").val());
+	newStock = currStock - lossStock;
+	$("#reviseQtyTotalStock").val(newStock);
+}
+
 function editProductData(element){
 	$("#reviseProductData").css("display","block");
 	$("#reviseProductID").val($(element).parent().parent().find(".ProductID").html());
@@ -26,7 +55,8 @@ function addQtyData(element){
 	$("#addQtyProductID").val($(element).parent().parent().find(".ProductID").html());
 	$("#addQtyProductName").val($(element).parent().parent().find(".ProductName").html());
 	$("#addQtyCurrentStock").val($(element).parent().parent().find(".ProductQty").html());
-	$("#addQtyTotalStock").val($(element).parent().parent().find(".ProductQty").html());
+	currentQty = $(element).parent().parent().find(".ProductQty").html();
+	// $("#addQtyTotalStock").val($(element).parent().parent().find(".ProductQty").html());
 }
 
 function reviseQtyData(element){
@@ -34,7 +64,7 @@ function reviseQtyData(element){
 	$("#reviseQtyProductID").val($(element).parent().parent().find(".ProductID").html());
 	$("#reviseQtyProductName").val($(element).parent().parent().find(".ProductName").html());
 	$("#reviseQtyCurrentStock").val($(element).parent().parent().find(".ProductQty").html());
-	$("#reviseQtyTotalStock").val($(element).parent().parent().find(".ProductQty").html());
+	//$("#reviseQtyTotalStock").val($(element).parent().parent().find(".ProductQty").html());
 }
 
 function createProduct(){

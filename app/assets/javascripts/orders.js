@@ -201,7 +201,6 @@ function orderItemToCart(){
 			"order_item[product_id]": productID,
 			"order_item[qty]": qty,
 			"order_item[price]": price
-			
 		},
 		success: function(returnData){
 			// update order items table
