@@ -2,52 +2,89 @@
 
 <div ng-controller="stockController">
   <h2> Inventory </h2>
-  <input type="button" data-toggle="collapse" value="New Product" data-target="#addNewProduct"></br></br>
-  <form id="addNewProduct" class="collapse">
-     Bike Name: <input type="text" id="newProductName"/>
-     <span id="new_product_bike_name_header" style="color: red;" hidden>Bike Name</span>
-     <span id="new_product_bike_name_alert" style="color: red;"></span>
-     </br></br>
+  <input type="button" data-toggle="collapse" class="btn btn-info" value="New Product" data-target="#addNewProduct"></br></br>
+  <form id="addNewProduct" role="form" class="collapse form-horizontal">
+    
+    <div class="form-group">
+      <label class="control-label-left col-sm-2" for="text">Bike Name:</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="newProductName"/>
+        </div>
+        <div class="col-sm-4">
+          <span id="new_product_bike_name_header" style="color: red;" hidden>Bike Name</span>
+          <span id="new_product_bike_name_alert" style="color: red;"></span>
+        </div>
+    </div>
      
-     Bike Model: 
-      <select id="newProductModel">
+     <div class="form-group">
+      <label class="control-label-left col-sm-2" for="text">Bike Model:</label>
+        <div class="col-sm-6">          
+          <select id="newProductModel" class="form-control">
         
-        <option value="">Select Model</option>
-        <%= BikeModel.all.each do |model| %>
-          <option value="<%= model.id%>"><%= model.bike_model_name%></option>
-        <% end %>
+            <option value="">Select Model</option>
+            <%= BikeModel.all.each do |model| %>
+              <option value="<%= model.id%>"><%= model.bike_model_name%></option>
+            <% end %>
+    
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <span id="new_product_bike_model_id_header" style="color: red;" hidden>Bike Model</span>
+          <span id="new_product_bike_model_id_alert" style="color: red;"></span>
+        </div>
+    </div>
 
-      </select>
+    <div class="form-group">
+      <label class="control-label-left col-sm-2" for="text">Price:</label>
+        <div class="col-sm-6">          
+          <input type="number" id="newProductPrice" class="form-control" minimum="1" />
+        </div>
+        <div class="col-sm-4">
+          <span id="new_product_price_header" style="color: red;" hidden>Bike Price</span>
+          <span id="new_product_price_alert" style="color: red;"></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="control-label-left col-sm-2" for="text">Bike Size:</label>
+        <div class="col-sm-6">          
+          <select id="newProductSize" class="form-control">
+            <option value="">Select Size</option>
+            
+            <%= @size.each do |s| %>
+              <option value="<%= s%>"><%= s%></option>
+            <% end %>
+    
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <span id="new_product_bike_size_header" style="color: red;" hidden>Bike Size</span>
+          <span id="new_product_bike_size_alert" style="color: red;"></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="control-label-left col-sm-2" for="text">Initial Qty:</label>
+        <div class="col-sm-6">          
+          <input type="number" id="newProductInitialStock"  minimum="0" class="form-control"/>
+        </div>
+        <div class="col-sm-4">
+          <span id="new_product_qty_header" style="color: red;" hidden>Bike Price</span>
+          <span id="new_product_qty_alert" style="color: red;"></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="control-label-left col-sm-2" for="text"></label>
+        <div class="col-sm-6">          
+          <input type="submit" name="Submit" class="btn btn-success" id="submitNewProduct" onclick="createProduct()">
+        </div>
+        <div class="col-sm-4">
+          
+        </div>
+    </div>
 
-      <span id="new_product_bike_model_id_header" style="color: red;" hidden>Bike Model</span>
-      <span id="new_product_bike_model_id_alert" style="color: red;"></span>
-      </br></br>
-
-     Price: <input type="number" id="newProductPrice" minimum="1"/>
-     <span id="new_product_price_header" style="color: red;" hidden>Bike Price</span>
-     <span id="new_product_price_alert" style="color: red;"></span>
-
-      </br></br>
-     Bike Size: 
-      <select id="newProductSize">
-        <option value="">Select Size</option>
-        
-        <%= @size.each do |s| %>
-          <option value="<%= s%>"><%= s%></option>
-        <% end %>
-
-      </select>
-
-      <span id="new_product_bike_size_header" style="color: red;" hidden>Bike Size</span>
-      <span id="new_product_bike_size_alert" style="color: red;"></span>
-      </br></br>
-
-     Initial Qty: <input type="number" id="newProductInitialStock"  minimum="0"/>
-     <span id="new_product_qty_header" style="color: red;" hidden>Bike Price</span>
-     <span id="new_product_qty_alert" style="color: red;"></span>
-     </br></br>
-
-     <input type="submit" name="Submit" id="submitNewProduct" onclick="createProduct()">
+     
   </form>
 
   <!-- Add Qty -->
@@ -72,9 +109,9 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label-left col-sm-2" for="text">New Stocks</label>
+        <label class="control-label-left col-sm-2" for="text">Plus Stocks</label>
         <div class="col-sm-6">          
-          <input type="number" class="form-control" id="addQtyAdditionalStock" placeholder="Enter Additional Stock"  minimum="1">
+          <input type="number" class="form-control" id="addQtyAdditionalStock" placeholder="Enter Additional Stock"  minimum="1" onchange="calculateTotalQty()">
         </div>
         <span id="add_qty_alteration_header" style="color: red;" hidden>New Stocks </span>
         <span id="add_qty_alteration_alert" style="color: red;"></span>
@@ -128,9 +165,9 @@
       </div>
 
       <div class="form-group">
-        <label class="control-label-left col-sm-2" for="text">New Stocks</label>
+        <label class="control-label-left col-sm-2" for="text">Loss Stocks</label>
         <div class="col-sm-6">          
-          <input type="number" class="form-control" id="reviseQtyAdditionalStock" placeholder="Enter Additional Stock"  minimum="1">
+          <input type="number" class="form-control" id="reviseQtyAdditionalStock" placeholder="Enter New Stock"  minimum="1" onchange="calculateNewStock()">
         </div>
         <span id="revise_qty_alteration_header" style="color: red;" hidden>New Stocks </span>
         <span id="revise_qty_alteration_alert" style="color: red;"></span>
@@ -239,10 +276,10 @@
             <td class="ProductPrice" > {{s.product.price}} </td>
             <td class="ProductSize" > {{s.product.bike_size}} </td>          
             <td> 
-             <input type="button" value="View Detail" class="viewProductDetail" onclick="viewProductDetail(this)">
-             <input type="button" value="Edit" class="editProduct" onclick="editProductData(this)" > 
-             <input type="button" value="Add Qty" class="inputProductStock" onclick="addQtyData(this)" > 
-             <input type="button" value="Revise Stock" class="reviseProductStock" onclick="reviseQtyData(this)" >
+             <input type="button" value="View Detail" class="btn btn-default viewProductDetail" onclick="viewProductDetail(this)">
+             <input type="button" value="Edit" class="btn btn-default editProduct" onclick="editProductData(this)" > 
+             <input type="button" value="Add Qty" class="btn btn-default inputProductStock" onclick="addQtyData(this)" > 
+             <input type="button" value="Revise Stock" class="btn btn-default reviseProductStock" onclick="reviseQtyData(this)" >
         </tr>
       </form>
     </tbody>
@@ -255,45 +292,45 @@
 </div><!--end of .table-responsive-->
 </div>
 
-<h1>Product List</h1>
-<p id="notice"><%= notice %></p>
+<!--<h1>Product List</h1>-->
+<!--<p id="notice"><%= notice %></p>-->
 
-<h1>Listing Products</h1>
+<!--<h1>Listing Products</h1>-->
 
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Bike name</th>
-      <th>Bike model</th>
-      <th>Stock</th>
-      <th>Price</th>
-      <th>Bike size</th>
-      <th colspan="5"></th>
-    </tr>
-  </thead>
+<!--<table>-->
+<!--  <thead>-->
+<!--    <tr>-->
+<!--      <th>ID</th>-->
+<!--      <th>Bike name</th>-->
+<!--      <th>Bike model</th>-->
+<!--      <th>Stock</th>-->
+<!--      <th>Price</th>-->
+<!--      <th>Bike size</th>-->
+<!--      <th colspan="5"></th>-->
+<!--    </tr>-->
+<!--  </thead>-->
 
-  <tbody>
-    <% @products.each do |product| %>
-      <tr>
-        <td><%= product.id %></td>
-        <td><%= product.bike_name %></td>
-        <td><%= product.bike_model.bike_model_name %></td>
-        <td><%= Stock.find_by(product_id: product.id).qty %>
-        <td><%= product.price %></td>
-        <td><%= product.bike_size %></td>
-        <td><%= link_to 'Check', inventory_check_path(:id => product.id) %></td>
-        <td><%= link_to 'Edit', edit_product_path(product) %></td>
-        <td><%= link_to 'Add Qty', inventory_add_path(:id => product.id) %></td>
-        <td><%= link_to 'Revise Item', inventory_revise_path(:id => product.id) %></td>
-        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' }%></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<!--  <tbody>-->
+<!--    <% @products.each do |product| %>-->
+<!--      <tr>-->
+<!--        <td><%= product.id %></td>-->
+<!--        <td><%= product.bike_name %></td>-->
+<!--        <td><%= product.bike_model.bike_model_name %></td>-->
+<!--        <td><%= Stock.find_by(product_id: product.id).qty %>-->
+<!--        <td><%= product.price %></td>-->
+<!--        <td><%= product.bike_size %></td>-->
+<!--        <td><%= link_to 'Check', inventory_check_path(:id => product.id) %></td>-->
+<!--        <td><%= link_to 'Edit', edit_product_path(product) %></td>-->
+<!--        <td><%= link_to 'Add Qty', inventory_add_path(:id => product.id) %></td>-->
+<!--        <td><%= link_to 'Revise Item', inventory_revise_path(:id => product.id) %></td>-->
+<!--        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' }%></td>-->
+<!--      </tr>-->
+<!--    <% end %>-->
+<!--  </tbody>-->
+<!--</table>-->
 
-<br>
+<!--<br>-->
 
-<%= link_to 'New Product', new_product_path %>
+<!--<%= link_to 'New Product', new_product_path %>-->
 
 

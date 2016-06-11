@@ -17,7 +17,12 @@
 //= require_tree 
 
 var myApp = angular.module("myApp", []);
+<<<<<<< HEAD
 var localhost = "http://localhost:3000";
+=======
+
+var localhost = "https://bike-store-anthonyprasetyo-1.c9users.io";
+>>>>>>> d51b701324195a510afad3b7cdb2923fd78963b6
 
 var dateFormat = function () {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,

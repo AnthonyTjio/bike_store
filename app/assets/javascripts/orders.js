@@ -197,8 +197,13 @@ function addToCart(){
 			_method: "POST",
 			"order_item[order_id]": orderID,
 			"order_item[product_id]": productID,
+<<<<<<< HEAD
 			"order_item[qty]": qty
 			
+=======
+			"order_item[qty]": qty,
+			"order_item[price]": price
+>>>>>>> d51b701324195a510afad3b7cdb2923fd78963b6
 		},
 		success: function(returnData){
 			// update order items table
