@@ -16,8 +16,8 @@ function editProductData(element){
 	$("#reviseProductData").css("display","block");
 	$("#reviseProductID").val($(element).parent().parent().find(".ProductID").html());
 	$("#reviseProductName").val($(element).parent().parent().find(".ProductName").html());
-	//$("#reviseProductModel").val($(element).parent().parent().find(".ProductModel").html());
-	//$("#reviseProductSize").val($(element).parent().parent().find(".ProductSize").html());
+	$("#reviseProductModel").val($(element).parent().parent().find(".ProductModel").html());
+	$("#reviseProductSize").val($(element).parent().parent().find(".ProductSize").html());
 	$("#reviseProductPrice").val($(element).parent().parent().find(".ProductPrice").html());
 }
 
@@ -76,8 +76,6 @@ function createProduct(){
 
 function editProduct(){
 	var productID = $('#reviseProductID').val();
-	var productModel = $('#reviseProductModel').val();
-	var productSize = $('#reviseProductSize').val();
 	var productPrice = $('#reviseProductPrice').val();
 	
 	$.ajax({
@@ -85,9 +83,7 @@ function editProduct(){
 		type: 'POST',
 		data: {
 			_method: "PUT",
-			"product[bike_model_id]": productModel,
-			"product[bike_size]": productSize,
-			"product[price]": productPrice,
+			"product[price]": productPrice
 		},
 		success: function(returnData){
 			alert("Product successfully updated!");

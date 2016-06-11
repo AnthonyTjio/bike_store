@@ -183,32 +183,15 @@
       
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">Bike Model:</label>
-        <div class="col-sm-6">                    
-          <select class="form-control" id="reviseProductModel">
-            <option value="">Select Model</option>
-            
-            <%= BikeModel.all.each do |model| %>
-              <option value="<%= model.id%>"><%= model.bike_model_name%></option>
-            <% end %>
-
-          </select>
-          <span id="revise_product_bike_model_id_header" style="color: red;" hidden>Bike Model </span>
-          <span id="revise_product_bike_model_id_alert" style="color: red;"></span>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="reviseProductModel" placeholder="Enter Product Model" disabled>
         </div>
       </div>
 
       <div class="form-group">
         <label class="control-label-left col-sm-2" for="text">Bike Size:</label>
         <div class="col-sm-6">          
-          <select class="form-control" id="reviseProductSize">
-            <option value="">Select Size</option>
-            
-            <%= @size.each do |s| %>
-              <option value="<%= s%>"><%= s%></option>
-            <% end %>
-          </select>
-          <span id="revise_product_bike_size_header" style="color: red;" hidden>Bike Size</span>
-          <span id="revise_product_bike_size_alert" style="color: red;"></span>
+          <input type="text" class="form-control" id="reviseProductSize" placeholder="Enter Product Size" disabled>
         </div>
       </br></br>
       </div>

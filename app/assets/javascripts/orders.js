@@ -123,13 +123,7 @@ function orderSetCustomerData(){
 	}
 	
 	if(ok){
-		$(".item-section").css("display","block");
 		
-		// --------ANIMATION------------
-		$('html,body').animate({
-        scrollTop: $(".item-section").offset().top},
-        'slow');
-        // -------------------------------
         
 		$.ajax({
 			url: localhost+"/orders.json",
@@ -142,9 +136,24 @@ function orderSetCustomerData(){
 				"customer[customer_phone]" : customerPhone
 			},
 			success: function(returnData){
-				//alert("Order Created!");
 				console.log(returnData);
 				 $('#orderItemOrderID').val(returnData.id);
+					
+					$(".item-section").css("display","block");				
+					// --------ANIMATION------------
+					$('html,body').animate({
+			        scrollTop: $(".item-section").offset().top},
+			        'slow');
+			        // -------------------------------
+				 
+			    $('#orderCustomerID').attr("disabled", true);
+				$('#orderCustomerName').attr("disabled", true);
+				$('#orderCustomerAddress').attr("disabled", true);
+				$('#orderCustomerPhone').attr("disabled", true);
+
+				$('#submitCustomerOrder').remove();
+
+				 window.history.pushState('edit/'+returnData.id,'Title','../'+returnData.id+'/edit');
 				 //alert("TEST");
 			},
 			error: function(status,jqXHR,returnText){
@@ -158,7 +167,7 @@ function orderSetCustomerData(){
 }
 
 function getProductData(){
-	var productID = $("#orderItemproductID").val();
+	var productID = $("#orderItemProductID").val();
 	$.ajax({
 		url: localhost+"/products/"+productID+".json",
 		type: 'GET',
@@ -170,6 +179,7 @@ function getProductData(){
 			$("#orderItemTotalPrice").val("0");
 		},
 		error: function(status, jqXHR, returnText){
+			alert(productID);
 			console.log(status);
 		}
 	});
@@ -179,7 +189,6 @@ function orderItemToCart(){
 	var orderID = $("#orderItemOrderID").val();
 	var productID = $("#orderItemProductID").val();
 	var qty = $("#orderItemQty").val();
-	var price = $("#orderItemPrice").val();
 	
 	// -------------JANGAN DIAPUS TON--------------
 	$(".payment-section").css("display","block");
@@ -199,8 +208,7 @@ function orderItemToCart(){
 			_method: "POST",
 			"order_item[order_id]": orderID,
 			"order_item[product_id]": productID,
-			"order_item[qty]": qty,
-			"order_item[price]": price
+			"order_item[qty]": qty
 			
 		},
 		success: function(returnData){

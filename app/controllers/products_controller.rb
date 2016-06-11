@@ -79,7 +79,7 @@ class ProductsController < ApplicationController
   # PATCH/PUT /products/1.json
   def update
     respond_to do |format|
-      if @product.update(product_params)
+      if @product.update(update_product_params)
         format.html { redirect_to request.referer, notice: 'Product was successfully updated.' }
         format.json { render :show, status: :ok, location: @product }
       else
@@ -116,5 +116,9 @@ class ProductsController < ApplicationController
 
     def stock_params
       params.require(:stock).permit(:qty)
+    end
+
+    def update_product_params
+        params.require(:product).permit(:price)
     end
 end
