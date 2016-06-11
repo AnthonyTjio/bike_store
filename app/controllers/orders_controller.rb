@@ -1,7 +1,6 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
   before_action :constructor
-  skip_before_filter  :verify_authenticity_token
   
   def constructor
     
@@ -48,14 +47,17 @@ class OrdersController < ApplicationController
           format.json { render json: {errors: "Customer not found"}, status: :unprocessable_entity }
         end
     end
+    puts "TEST"
     if(ok)
       @order = Order.new()
       @order.customer_id = @customer.id
       
       respond_to do |format|
         if @order.save
+          puts "Success"
           format.json { render :show, status: :created, location: @order }
         else
+          puts "Failed"
           format.json {render json: {errors: @order.errors}, status: :unprocessable_entity }
         end
       end

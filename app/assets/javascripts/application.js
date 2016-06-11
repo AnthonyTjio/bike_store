@@ -17,7 +17,6 @@
 //= require_tree 
 
 var myApp = angular.module("myApp", []);
-
 var localhost = "https://bike-store-anthonyprasetyo-1.c9users.io";
 
 var dateFormat = function () {

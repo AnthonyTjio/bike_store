@@ -1,5 +1,5 @@
 myApp.controller('stockController', ['$scope', '$http', function($scope, $http){
-  $scope.title = "TEST";
+  $scope.title = "Stocks";
   $scope.totalQty = function(){
   
   }
