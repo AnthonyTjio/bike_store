@@ -42,6 +42,8 @@ function calculateNewStock() {
 }
 
 function editProductData(element){
+	$('#addQtyData').css("display","none");
+	$('#reviseQtyData').css("display","none");
 	$("#reviseProductData").css("display","block");
 	$("#reviseProductID").val($(element).parent().parent().find(".ProductID").html());
 	$("#reviseProductName").val($(element).parent().parent().find(".ProductName").html());
@@ -51,6 +53,8 @@ function editProductData(element){
 }
 
 function addQtyData(element){
+	$("#reviseProductData").css("display","none");
+	$('#reviseQtyData').css("display","none");
 	$('#addQtyData').css("display","block");
 	$("#addQtyProductID").val($(element).parent().parent().find(".ProductID").html());
 	$("#addQtyProductName").val($(element).parent().parent().find(".ProductName").html());
@@ -60,6 +64,8 @@ function addQtyData(element){
 }
 
 function reviseQtyData(element){
+	$("#reviseProductData").css("display","none");
+	$('#addQtyData').css("display","none");
 	$('#reviseQtyData').css("display","block");
 	$("#reviseQtyProductID").val($(element).parent().parent().find(".ProductID").html());
 	$("#reviseQtyProductName").val($(element).parent().parent().find(".ProductName").html());
