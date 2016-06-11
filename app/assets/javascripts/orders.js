@@ -185,22 +185,11 @@ function getProductData(){
 	});
 }
 
-function orderItemToCart(){
+function addToCart(){
 	var orderID = $("#orderItemOrderID").val();
 	var productID = $("#orderItemProductID").val();
 	var qty = $("#orderItemQty").val();
 	
-	// -------------JANGAN DIAPUS TON--------------
-	$(".payment-section").css("display","block");
-		
-		// --------ANIMATION------------
-		$('html,body').animate({
-        scrollTop: $(".payment-section").offset().top},
-        'slow');
-        // -------------------------------
-        
-    // -----------------------------------------------
-        
 	$.ajax({
 		url:localhost+"/order_items.json",
 		type: 'POST',
@@ -215,8 +204,8 @@ function orderItemToCart(){
 			// update order items table
 			console.log(returnData);
 		},
-		error: function(status, jqXHR, returnText){
-			console.log(status);
+		error: function(statusText, jqXHR, returnText){
+			alert(returnText);
 			var errorMessage = JSON.parse(statusText.responseText).errors;
 				
 			$.each(errorMessage, function(key, value) {

@@ -9,6 +9,7 @@ Rails.application.config.assets.precompile += %w( angular/controller/customerCon
 Rails.application.config.assets.precompile += %w( angular/controller/productController.js )
 Rails.application.config.assets.precompile += %w( angular/controller/userController.js )
 Rails.application.config.assets.precompile += %w( angular/controller/modelController.js )
+Rails.application.config.assets.precompile += %w( angular/controller/cartController.js )
 
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path

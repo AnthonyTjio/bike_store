@@ -5,6 +5,8 @@
         });
 </script>
 <%= javascript_include_tag "angular/controller/orderController" %>
+<%= javascript_include_tag "angular/controller/cartController" %>
+
 
 <input type="hidden" disabled id="orderItemOrderID"  value="<%= @order.id %>" />
 
@@ -89,10 +91,7 @@
             </div>
         </div>
     </div>
-    
-    <!-----------------------END OF CUSTOMER-------------------------------> 
-        
-    <!-------------------------ITEM------------------------------->      
+       
     <div class="row">
         <div class="col-md-2">
                 
@@ -167,14 +166,14 @@
                             
                         </div>
                         <div class="col-md-4 item-to-add">
-                          <input type="button" value="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="orderItemAddToCart()">
+                          <input type="button" value="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart()">
                         </div>
                         <div class="col-md-6 item-to-add">
                            
                         </div>
                     </div>   
     
-                     <div class="row">
+                     <div class="row" ng-controller="NewOrderItemController" >
                         <div class="col-md-12" >
                             
                           <div id="table-responsive-custom">
@@ -220,10 +219,9 @@
             
         </div>
     </div>
-     <!---------------------------END OF ITEM----------------------->
-     
-     <!-------------------------PAYMENT------------------------------->      
-    <div class="row payment-section">
+
+
+    <div class="row">
         <div class="col-md-2">
                 
         </div>
