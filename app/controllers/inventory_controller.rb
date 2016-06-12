@@ -1,6 +1,7 @@
 class InventoryController < ApplicationController
   before_action :constructor
   require 'date'
+  skip_before_filter :verify_authenticity_token
 
   def constructor
     @size = %w[12 14 16 18 20 24 26 27] 

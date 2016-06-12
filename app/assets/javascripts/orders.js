@@ -168,8 +168,8 @@ function orderSetCustomerData(){
 				 window.history.pushState('edit/'+returnData.id,'Title','../'+returnData.id+'/edit');
 				 //alert("TEST");
 			},
-			error: function(status,jqXHR,returnText){
-				console.log(status);
+			error: function(statusText,jqXHR,returnText){
+				console.log(JSON.parse(statusText.responseText).errors);
 				// var errorMessage = JSON.parse(returnText.responseText).errors;
 				// console.log(errorMessage);
 			}
@@ -216,7 +216,6 @@ function addToCart(){
 			console.log(returnData);
 		},
 		error: function(statusText, jqXHR, returnText){
-			alert(returnText);
 			var errorMessage = JSON.parse(statusText.responseText).errors;
 				
 			$.each(errorMessage, function(key, value) {
@@ -225,8 +224,29 @@ function addToCart(){
 			    console.log(key, value);
 			});
 		}
-	})
+	});
 	
+}
+
+function confirmOrder(){
+	var orderID = $("#orderItemOrderID").val();
+
+	$.ajax({
+		url: localhost+"/orders/verify_order.json",
+		type: 'POST',
+		data:{
+			"order[id]": orderID,
+			"status": true
+		},
+		success: function(returnData){
+			alert("Success: "+returnData.message);	
+		},
+		error: function(statusText, jqXHR, returnText){
+			console.log(JSON.parse(statusText.responseText).message+" "+returnText);
+			alert("Error: "+JSON.parse(statusText.responseText).message);
+		}
+
+	});
 }
 
 function deleteOrderItem(){

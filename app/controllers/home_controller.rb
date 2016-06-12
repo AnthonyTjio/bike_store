@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
 
   before_action :set_user, only: [:update, :delete]
-
+  skip_before_filter :verify_authenticity_token
+  
   def index
     @orders = Order.all
   end
