@@ -14,11 +14,12 @@ function retrieveDataDetailView(orderID){
 				console.log(returnData[i].product_name)
 				var html= ''
 				html+= '<tr class="cart-'+returnData[i].product_id+'">'
+				html+= '<td class="orderItemID" hidden>'+returnData[i].id+"</td>"
 				html+= '<td class="cart-item-productName-'+returnData[i].product_id+'">'
 				html+=  returnData[i].product_name
 				html+= '</td>'
 				html+= '<td class="cart-item-price-'+returnData[i].product_id+'">'
-				html+=	returnData[i].price
+				html+=	"$ "+returnData[i].price
 				html+= '</td>'
 				html+= '<td class="cart-item-qty-'+returnData[i].product_id+'">'
 				html+=	returnData[i].qty
@@ -27,14 +28,15 @@ function retrieveDataDetailView(orderID){
 				html+=	returnData[i].current_stock
 				html+= '</td>'
 				html+= '<td class="cart-item-total-price-'+returnData[i].product_id+'">'
-				html+=	count
+				html+=	"$ "+count
 				html+= '</td>'
 	            html+= '<td>'
-	            html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteItemFromCart('+returnData[i].product_id+')">'
+	            //html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteItemFromCart('+returnData[i].product_id+'); deleteOrderItem(this);">'
+	            html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteOrderItem(this,'+returnData[i].product_id+');">'
 	            html+= '</td>'
 	            html+= '</tr>'
 	            $(".cart-item").append(html);
-			}
+			};
 		},
 		error: function(statusText, jqXHR, returnText){
 			alert(statusText.responseText.message);
@@ -346,11 +348,12 @@ function addToCart(){
 			{
 				var html= ''
 				html+= '<tr class="cart-'+productID+'">'
+				html+= '<td class="orderItemID" hidden>'+returnData.id+"</td>"
 				html+= '<td class="cart-item-productName-'+productID+'">'
 				html+=  returnData.product_name
 				html+= '</td>'
 				html+= '<td class="cart-item-price-'+productID+'">'
-				html+=	returnData.price
+				html+=	"$ "+returnData.price
 				html+= '</td>'
 				html+= '<td class="cart-item-qty-'+productID+'">'
 				html+=	returnData.qty
@@ -359,10 +362,10 @@ function addToCart(){
 				html+=	returnData.current_stock
 				html+= '</td>'
 				html+= '<td class="cart-item-total-price-'+productID+'">'
-				html+=	orderItemTotalPrice
+				html+=	"$ "+orderItemTotalPrice
 				html+= '</td>'
 	            html+= '<td>'
-	            html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteItemFromCart('+productID+')">'
+	            html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteOrderItem(this,'+productID+'); deleteOrderItem(this);">'
 	            html+= '</td>'
 	            html+= '</tr>'
 	            $(".cart-item").append(html);
@@ -388,7 +391,6 @@ function addToCart(){
 function confirmOrder(){
 
 	var orderID = $("#orderItemOrderID").val();
-
 	$.ajax({
 		url: localhost+"/orders/verify_order.json",
 		type: 'POST',
@@ -408,8 +410,9 @@ function confirmOrder(){
 	});
 }
 
-function deleteOrderItem(){
-	var orderItemID = delId;
+function deleteOrderItem(orderItemRow, element){
+	delId = $(orderItemRow).parent().parent().find(".orderItemID").html();
+	var orderItemID = delId
 	$.ajax({
 		url: localhost+"/order_items/"+orderItemID+".json",
 		type: "POST",
@@ -417,10 +420,19 @@ function deleteOrderItem(){
 			_method: "DELETE",
 		},
 		success: function(returnData){
-			// reload order items table
+			console.log($(".cart-item-price-"+element+"").html());
+			$(".cart-"+element+"").remove();
+			for( var i = 0 ; i < arrayForCheckingCart.length ; i++ )
+			{
+				if(arrayForCheckingCart[i] == element)
+				{
+					arrayForCheckingCart.splice(i,1)
+				}
+			}
+			console.log(arrayForCheckingCart);
 		},
-		error: function(status, jqXHR, returnText){
-			console.log(JSON.parse(status.responseText));
+		error: function(statusText, jqXHR, returnText){
+			alert("Verified orders cannot be modified");
 		}
 		
 	});
@@ -493,7 +505,7 @@ function confirmDelivery(){
 			window.location.reload(true);
 		},
 		error: function(statusText, jqxHR, returnText){
-			console.log(JSON.parse(statusText.responseText).errors)
+			alert(JSON.parse(statusText.responseText).errors)
 		}
 	})
 }

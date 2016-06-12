@@ -59,10 +59,17 @@ class InventoryController < ApplicationController
     end
 
     history_track = StockHistory.where(stock_id: @stock.id, created_at: start_date..end_date)
+    @history_track = history_track
+    @starting_stock = starting_stock
+    @ending_stock = ending_stock
 
     respond_to do |format|
       #format.json { render json: {starting_stock: starting_stock, ending_stock: ending_stock} }
       format.json { render json: {start_date: dummy_start_date, product_track: history_track,   current_stock: current_stock, starting_stock: starting_stock, ending_stock: ending_stock} }
+      format.pdf {
+        render pdf: "Stock History #{@product.bike_name} Period #{start_date} to #{end_date}",
+        template: "inventory/stock_track.pdf.html.erb"
+      }
     end
   end
 

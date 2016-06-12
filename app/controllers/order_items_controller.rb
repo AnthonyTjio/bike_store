@@ -114,15 +114,22 @@ class OrderItemsController < ApplicationController
   # DELETE /order_items/1
   # DELETE /order_items/1.json
   def destroy
-    order = Order.find_by_id(order_item_params[:order_id])
-    if order.pre_order? # the order haven't verified
-      @order_item.destroy
-      respond_to do |format|
-        format.json { render json: {message: "Order Item successfully deleted!"}, status: :ok }
+    order_item = OrderItem.find_by_id(params[:id])
+    if(order_item)
+      order = Order.find_by_id(order_item.order)
+      if order.pre_order? # the order haven't verified
+        order_item.destroy
+        respond_to do |format|
+          format.json { render json: {message: "Order Item successfully deleted!"}, status: :ok }
+        end
+      else # the order is already verified
+        respond_to do |format|
+          format.json { render json: {message: "Cannot delete verified order!"}, status: :unprocessable_entity }
+        end
       end
-    else # the order is already verified
+    else
       respond_to do |format|
-        format.json { render json: {message: "Cannot delete verified order!"}, status: :unprocessable_entity }
+          format.json { render json: {message: "Order Item not found"}, status: :unprocessable_entity }
       end
     end
     

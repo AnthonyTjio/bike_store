@@ -211,10 +211,10 @@
                             </tfoot>
                           </table>
                         </div><!--end of .table-responsive-->
-                            <div style="text-align:right;"><h4>Grand Total:<span class="grand-total"></span></h4></div>
+                            <div style="text-align:right;"><h4>Grand Total: $<span class="grand-total"></span></h4></div>
                             <% if @order.pre_order? %>
                             <input type="button" name="Save Order" id="saveOrderButton" value="Save" class="btn btn-success" onclick="saveOrderInformation()">
-                            <input type="button" name="Confirm Order" id="confirmOrderButton" value="Next" class="btn btn-success" onclick="confirmOrder()">
+                            <input type="button" name="Confirm Order" id="confirmOrderButton" value="Confirm" class="btn btn-success" onclick="confirmOrder()">
                             <% end %>
                         </div>
                     </div> 
@@ -252,7 +252,7 @@
                             Shipping Address
                         </div>
                         <div class="col-md-4 payment-shipping-section">
-                            <input type="text" class="form-control" id="orderDetailsShippingAddress" value="<%= @order.shipping_address%>" required/>
+                            <input type="text" class="form-control" id="orderDetailsShippingAddress" value="<%= @order.shipping_address.nil? ? @order.customer.customer_address : @order.shipping_address%>"/>
                         </div>
                         <div class="col-md-6 payment-shipping-section">
                            
@@ -284,7 +284,7 @@
                                              
                         </div>
                         <div class="col-md-4 payment-shipping-section">
-                            <input type="text" class="form-control" id="orderDetailShippingDate" value="<%= @order.shipping_date %>" required/>
+                            <input type="text" class="form-control" id="orderDetailShippingDate" value="<%= @order.shipping_date.tomorrow %>"/>
                         </div>
                         <div class="col-md-6 payment-shipping-section">
                            
