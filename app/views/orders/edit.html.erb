@@ -1,9 +1,11 @@
 <script type="text/javascript">
               $(function() {
-          $("#productHistoryStartingDate" ).datepicker();
-          $("#productHistoryEndingDate" ).datepicker();
+          $("#orderDetailShippingDate" ).datepicker();
         });
 </script>
+
+
+
 <%= javascript_include_tag "angular/controller/orderController" %>
 <%= javascript_include_tag "angular/controller/cartController" %>
 
@@ -207,7 +209,7 @@
                             </tfoot>
                           </table>
                         </div><!--end of .table-responsive-->
-                            <input type="button" name="Save Order" id="saveOrderButton" value="Save" class="btn btn-success" onclick="saveOrder()">
+                            <input type="button" name="Save Order" id="saveOrderButton" value="Save" class="btn btn-success" onclick="saveOrderInformation()">
                             <input type="button" name="Confirm Order" id="confirmOrderButton" value="Next" class="btn btn-success" onclick="confirmOrder()">
                             
                         </div>
@@ -246,7 +248,7 @@
                             Shipping Address
                         </div>
                         <div class="col-md-4 payment-shipping-section">
-                            <input type="text" class="form-control" id="shippingAddress"/>
+                            <input type="text" class="form-control" id="orderDetailsShippingAddress" value="<%= @order.shipping_address%>"/>
                         </div>
                         <div class="col-md-6 payment-shipping-section">
                            
@@ -258,10 +260,12 @@
                             Shipping Method
                         </div>
                         <div class="col-md-4 payment-shipping-section">
-                            <select id="shippingMethod" class="form-control">
+                            <select id="orderDetailShippingMethod" class="form-control">
                               
-                                 <option value="onTheSpot">On The Spot</option>
-                                 <option value="delivery">Delivery</option>
+                                 <option value="">Select Shipping Method</option>
+
+                                 <option value="on_the_spot" <%= @order.on_the_spot? ? "Selected" : ""%>> On The Spot</option>
+                                 <option value="delivery" <%= @order.delivery? ? "Selected" : ""%>> Delivery</option>
                                  
                             </select>
                         </div>
@@ -272,10 +276,11 @@
                     
                     <div class="row">
                         <div class="col-md-2" >
-                            Shipping Date
+                            Shipping Date 
+                                             
                         </div>
                         <div class="col-md-4 payment-shipping-section">
-                            <input type="date" class="form-control" id="shippingDate"/>
+                            <input type="text" class="form-control" id="orderDetailShippingDate" value="<%= @order.shipping_date %>"/>
                         </div>
                         <div class="col-md-6 payment-shipping-section">
                            
@@ -289,7 +294,7 @@
                         <div class="col-md-10 payment-shipping-section">
                             <button class="btn btn-success confirm-payment" data-toggle="modal" data-target="#paymentConfirm" >Confirm payment</button>
                             <button class="btn btn-warning confirm-delivery" data-toggle="modal" data-target="#deliveryConfirm">Confirm delivery</button>
-                            <button class="btn btn-primary save">Save</button>
+                            <button class="btn btn-primary save" onclick="saveOrderInformation()">Save</button>
                         </div>
                         
                     </div> 
@@ -317,7 +322,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-          <button type="button" class="btn btn-primary" onclick="">Yes</button>
+          <button type="button" class="btn btn-primary" onclick="confirmPayment()">Yes</button>
         </div>
       </div>
     </div>
@@ -335,9 +340,14 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-          <button type="button" class="btn btn-primary" onclick="">Yes</button>
+          <button type="button" class="btn btn-primary" onclick="confirmDelivery()">Yes</button>
         </div>
       </div>
     </div>
   </div>
   
+<script>
+    var date = new Date($("#orderDetailShippingDate").val());
+
+    $("#orderDetailShippingDate").val(dateFormat(date, "mm/dd/yyyy"));
+</script> 

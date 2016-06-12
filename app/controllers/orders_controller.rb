@@ -96,22 +96,33 @@ class OrdersController < ApplicationController
 
   def confirm_payment
     @order = Order.find(order_params[:id])
+
+    shipping_date = order_params[:shipping_date]
+    shipping_address = order_params[:shipping_address]
+    shipping_method = order_params[:shipping_method]
+
     print = true
     if (@order.pre_order?) # if the order hasn't verified, they cannot pay
       print = false
       respond_to do |format|
-        format.json { render json: {message: "The order is not verified yet"}, status: :unprocessable_entity }
+        format.json { render json: {errors: "The order is not verified yet"}, status: :unprocessable_entity }
       end
-    elsif (@order.void?)
+    elsif (@order.cancelled?)
       print = false
       respond_to do |format|
-        format.json { render json: {message: "The order is voided"}, status: :unprocessable_entity }
+        format.json { render json: {errors: "Cannot update cancelleded order"}, status: :unprocessable_entity }
       end
     elsif (@order.active_order?)
+      if !@order.is_delivered
+        @order.shipping_date = shipping_date
+        @order.shipping_address = shipping_address
+        @order.shipping_method = shipping_method
+      end
+
       @order.is_paid = true
       @order.payment_date = Date.today
 
-      if (@order.is_paid)&&(@order.is_delivered))
+      if ((@order.is_paid)&&(@order.is_delivered))
         @order.finished!
       end
 
@@ -126,7 +137,7 @@ class OrdersController < ApplicationController
     end
   end
 
-  def confirm_deliver
+  def confirm_delivery
     @order = Order.find(order_params[:id])
 
     shipping_date = order_params[:shipping_date]
@@ -137,14 +148,15 @@ class OrdersController < ApplicationController
     if (@order.pre_order?) # if the order hasn't verified, they cannot pay
       print = false
       respond_to do |format|
-        format.json { render json: {message: "The order is not verified yet"}, status: :unprocessable_entity }
+        format.json { render json: {errors: "The order is not verified yet"}, status: :unprocessable_entity }
       end
-    elsif (@order.void?)
+    elsif (@order.cancelled?)
       print = false
       respond_to do |format|
-        format.json { render json: {message: "The order is voided"}, status: :unprocessable_entity }
+        format.json { render json: {errors: "Cannot update cancelleded order"}, status: :unprocessable_entity }
       end
     elsif (@order.active_order?)
+
       if @order.shipping_date.nil?
         @order.shipping_date = shipping_date
       end
@@ -157,18 +169,20 @@ class OrdersController < ApplicationController
         @order.shipping_method = shipping_method
       end
 
-      if ( (@order.shipping_date.present?) && (@order.shipping_address.present?) && (@order.shipping_method.present?))
+      if ( (@order.is_paid) && (@order.shipping_date.present?) && (@order.shipping_address.present?) && (@order.shipping_method.present?))
         @order.is_delivered
       else
         print = false
         respond_to do |format|
-          format.json { render json: {message: "Please fill all shipping details before confirm shipment"}, status: :unprocessable_entity}
+          format.json { render json: {errors: "Please fill all shipping details and payment before confirm shipment"}, status: :unprocessable_entity}
         end
       end
     
-      if (@order.is_paid)&&(@order.is_delivered))
+      if ((@order.is_paid)&&(@order.is_delivered))
         @order.finished!
       end
+
+      @order.save
       
     end  
 
@@ -206,13 +220,22 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
-    @order = Order.find_by_id(order_params[:id])
-    if(@order.update(order_params))
-      # specify what you're going to do if the updated order has "this"
-    else
-      respond_to do |format|
-        format.json {render json: {errors: @order.errors}, status: :unprocessable_entity }
-      end
+    @order = Order.find(params[:id])
+    if((@order.active_order?)&&(!@order.is_delivered))
+      @order.shipping_method = order_details_params[:shipping_method]
+      @order.shipping_address = order_details_params[:shipping_address]
+
+      dummy_shipping_date = order_details_params[:shipping_date] 
+      dummy_shipping_date[0], dummy_shipping_date[3] = dummy_shipping_date[3], dummy_shipping_date[0]
+      dummy_shipping_date[1], dummy_shipping_date[4] = dummy_shipping_date[4], dummy_shipping_date[1]  
+
+      @order.shipping_date = DateTime.parse(dummy_shipping_date)
+
+      @order.save
+    end
+
+    respond_to do |format|
+      format.json {render json: {message: "Order Details has been saved"}, status: :ok }
     end
   end
 
@@ -220,15 +243,15 @@ class OrdersController < ApplicationController
   # DELETE /orders/1.json
   def destroy
     if !@order.finished
-      @order.void!
+      @order.cancelled!
 
       @order.update
       respond_to do |format|
-        format.json { render json: {message: "The order is voided"}, status: :ok }
+        format.json { render json: {message: "The order is cancelleded"}, status: :ok }
       end
     else
       respond_to do |format|
-        format.json { render json: {message: "Cannot void finished order"}, status: :unprocessable_entity }
+        format.json { render json: {message: "Cannot cancelled finished order"}, status: :unprocessable_entity }
       end
     end
     
@@ -250,4 +273,7 @@ class OrdersController < ApplicationController
       params.require(:customer).permit(:id, :customer_name, :customer_address, :customer_phone)
     end  
 
+    def order_details_params
+      params.require(:order).permit(:shipping_method, :shipping_date, :shipping_address)
+    end
 end
