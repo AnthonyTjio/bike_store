@@ -4,11 +4,14 @@ myApp.controller('orderController', ['$scope', '$http', function($scope, $http){
     $scope.sortReverse  = false;  // set the default sort order
     $scope.searchOrder   = '';     // set the default search/filter term
     
+
 $http.get(localhost+"/orders.json").then(function(response,status,headers,config){
         $scope.orders = response.data;
         console.log($scope.orders)
       },function(data,status,headers, config){
-      	alert(data+" "+status+" "+headers+" "+config);
+      	//alert(data+" "+status+" "+headers+" "+config);
+        console.log(data);
+        console.log(localhost+"/orders.json");
       });
 }]);      
 
