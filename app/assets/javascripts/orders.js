@@ -182,8 +182,9 @@ function getProductData(){
 			$("#orderItemTotalPrice").val("0");
 		},
 		error: function(status, jqXHR, returnText){
-			alert(productID);
-			console.log(status);
+			$("#orderItemPrice").val("");
+			$("#orderItemQty").val("");
+			$("#orderItemTotalPrice").val("");
 		}
 	});
 }
@@ -208,7 +209,7 @@ function addToCart(){
 		},
 		error: function(statusText, jqXHR, returnText){
 			var errorMessage = JSON.parse(statusText.responseText).errors;
-				
+			console.log(errorMessage+" "+returnText);
 			$.each(errorMessage, function(key, value) {
 				$('#order_item_' + key + '_header').attr("hidden", false);
 				$('#order_item_' + key + '_alert').html(value);

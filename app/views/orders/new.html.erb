@@ -127,7 +127,7 @@
                         </div>
                         <div class="col-md-4 item-to-add">
                             <select id="orderItemProductID" class="form-control" onchange="getProductData()">
-                                <option value="-">Select Product</option>
+                                <option value="">Select Product</option>
                               <%= Product.all.order(:bike_name).each do |product| %>
                                 <option value="<%= product.id%>"><%= product.bike_name%></option>
                               <% end %>

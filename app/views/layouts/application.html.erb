@@ -76,6 +76,7 @@
                                 </div>
                             </div>
                         </div>
+                        <% if ((@current_user!=nil) && (@current_user.user_type)) == "Admin" %>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -86,14 +87,12 @@
                                 </h4>
                             </div>                        
                         </div>
+                        <% end %>
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <h4 class="panel-title">
-    
-                                    <%= link_to "Login", home_login_path %><br />
-                                    <%= link_to "Logout", home_logout_path %><br />
+                                <h4 class="panel-title">                                
                                     <%= link_to "Change Password", home_change_password_path %><br/> 
-                            
+                                    <%= link_to "Logout", home_logout_path %><br />
                                 </h4>
                             </div>
                         </div>

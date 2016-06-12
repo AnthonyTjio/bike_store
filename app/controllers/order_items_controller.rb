@@ -36,57 +36,64 @@ class OrderItemsController < ApplicationController
     product =  Product.find_by_id(order_item_params[:product_id])
     qty = order_item_params[:qty].to_i
 
-    if (order.pre_order?)
+    if (product)
+      if (order.pre_order?)
 
         if(!OrderItem.exists?(:order_id => order.id, :product_id => product.id))
           
-          @order_item = OrderItem.new()
+            @order_item = OrderItem.new()
 
-          price = product.price
+            price = product.price
 
-          # masukin dalam datanya
-          @order_item.order_id = order.id
-          @order_item.product_id = product.id
-          @order_item.qty = qty
-          @order_item.price = price
+            # masukin dalam datanya
+            @order_item.order_id = order.id
+            @order_item.product_id = product.id
+            @order_item.qty = qty
+            @order_item.price = price
 
-          respond_to do |format|
+            respond_to do |format|
 
-            if @order_item.save
-              puts "XYYXY"
-              format.json { render :show, status: :created}
-            else
-              puts @order_item.errors
-              format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity }
+              if @order_item.save
+                puts "XYYXY"
+                format.json { render :show, status: :created}
+              else
+                puts @order_item.errors
+                format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity }
+              end
+
+            end
+
+          else # if the product existed in the cart
+
+            @order_item = OrderItem.find_by(:order_id => order.id, :product_id => product.id)
+            price = @order_item.product.price
+
+            @order_item.qty = qty
+            @order_item.price = price
+
+            respond_to do |format|
+              if @order_item.save
+                format.json { render :show, status: :created}
+              else
+                format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity}
+              end
+
             end
 
           end
+      else # the order is already verified 
 
-        else # if the product existed in the cart
-
-          @order_item = OrderItem.find_by(:order_id => order.id, :product_id => product.id)
-          price = @order_item.product.price
-
-          @order_item.qty = qty
-          @order_item.price = price
-
-          respond_to do |format|
-            if @order_item.save
-              format.json { render :show, status: :created}
-            else
-              format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity}
-            end
-
-          end
-
+        respond_to do |format|
+          format.json { render json: {errors: "The order is already verified"} , status: :unprocessable_entity }        
         end
-    else # the order is already verified 
-
-      respond_to do |format|
-        format.json { render json: {errors: "The order is already verified"} , status: :unprocessable_entity }        
       end
 
+    else # product not found 
+      respond_to do |format|
+        format.json {render json: {errors: {product_id: "cannot be empty"}}, status: :unprocessable_entity}
+      end
     end
+    
 
   end
 
