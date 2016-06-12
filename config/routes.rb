@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   get 'orders/index'
   post 'orders/verify_order'
   post 'orders/confirm_payment'
-  post 'orders/confirm_delivered'
+  post 'orders/confirm_delivery'
 
   get 'order_items/index'
   get 'bike_models/index'

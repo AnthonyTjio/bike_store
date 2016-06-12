@@ -136,24 +136,15 @@ function orderSetCustomerData(){
 				"customer[customer_phone]" : customerPhone
 			},
 			success: function(returnData){
-				console.log(returnData);
-				 $('#orderItemOrderID').val(returnData.id);
-					
-					$(".item-section").css("display","block");				
-					// --------ANIMATION------------
-					$('html,body').animate({
-			        scrollTop: $(".item-section").offset().top},
-			        'slow');
-			        // -------------------------------
-				 
+				console.log(returnData);				 
 			    $('#orderCustomerID').attr("disabled", true);
 				$('#orderCustomerName').attr("disabled", true);
 				$('#orderCustomerAddress').attr("disabled", true);
 				$('#orderCustomerPhone').attr("disabled", true);
 
 				$('#submitCustomerOrder').remove();
-
-				 window.history.pushState('edit/'+returnData.id,'Title','../'+returnData.id+'/edit');
+				 
+				 window.location.replace('../'+returnData.id+'/edit');
 				 //alert("TEST");
 			},
 			error: function(statusText,jqXHR,returnText){
@@ -249,10 +240,84 @@ function deleteOrderItem(){
 			// reload order items table
 		},
 		error: function(status, jqXHR, returnText){
-			console.log(status);
+			console.log(JSON.parse(status.responseText));
 		}
 		
 	});
+}
+
+function confirmPayment(){
+	var orderID = $("#orderItemOrderID").val();
+	var shippingAddress = $("#orderDetailsShippingAddress").val();
+	var shippingMethod = $("#orderDetailShippingMethod").val();
+	var shippingDate = $("#orderDetailShippingDate").val();
+
+	$.ajax({
+		url: localhost+"/orders/confirm_payment.json",
+		type: "POST",
+		data: {
+			_method: "POST",
+			"order[id]": orderID,
+			"order[shipping_address]": shippingAddress,
+			"order[shipping_method]": shippingMethod,
+			"order[shipping_date]": shippingDate
+		},
+		success: function(returnData){
+			alert(returnData.message)
+		},
+		error: function(statusText, jqxHR, returnText){
+			console.log(JSON.parse(statusText.responseText).errors)
+		}
+	})
+}
+
+function confirmDelivery(){
+	var orderID = $("#orderItemOrderID").val();
+	var shippingAddress = $("#orderDetailsShippingAddress").val();
+	var shippingMethod = $("#orderDetailShippingMethod").val();
+	var shippingDate = $("#orderDetailShippingDate").val();
+
+	$.ajax({
+		url: localhost+"/orders/confirm_delivery.json",
+		type: "POST",
+		data: {
+			_method: "POST",
+			"order[id]": orderID,
+			"order[shipping_address]": shippingAddress,
+			"order[shipping_method]": shippingMethod,
+			"order[shipping_date]": shippingDate
+		},
+		success: function(returnData){
+			alert(returnData.message)
+		},
+		error: function(statusText, jqxHR, returnText){
+			console.log(JSON.parse(statusText.responseText).errors)
+		}
+	})
+}
+
+function saveOrderInformation(){
+	var orderID = $("#orderItemOrderID").val();
+	var shippingAddress = $("#orderDetailsShippingAddress").val();
+	var shippingMethod = $("#orderDetailShippingMethod").val();
+	var shippingDate = $("#orderDetailShippingDate").val();
+
+	$.ajax({
+		url: localhost+"/orders/"+orderID+".json",
+		type: "POST",
+		data: {
+			_method: "PUT",
+			"order[shipping_address]": shippingAddress,
+			"order[shipping_method]": shippingMethod,
+			"order[shipping_date]": shippingDate
+		},
+		success: function(returnData){
+			window.location = localhost+"/orders"
+		},
+		error: function(statusText, jqxHR, returnText){			
+			console.log(JSON.parse(statusText.responseText));
+		}
+	})
 }
 
 var delId = "";

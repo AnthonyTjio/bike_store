@@ -53,8 +53,10 @@ class OrderItemsController < ApplicationController
           respond_to do |format|
 
             if @order_item.save
+              puts "XYYXY"
               format.json { render :show, status: :created}
             else
+              puts @order_item.errors
               format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity }
             end
 
@@ -83,7 +85,7 @@ class OrderItemsController < ApplicationController
       respond_to do |format|
         format.json { render json: {errors: "The order is already verified"} , status: :unprocessable_entity }        
       end
-      
+
     end
 
   end
@@ -105,10 +107,18 @@ class OrderItemsController < ApplicationController
   # DELETE /order_items/1
   # DELETE /order_items/1.json
   def destroy
-    @order_item.destroy
-    respond_to do |format|
-      format.json { head :no_content }
+    order = Order.find_by_id(order_item_params[:order_id])
+    if order.pre_order? # the order haven't verified
+      @order_item.destroy
+      respond_to do |format|
+        format.json { render json: {message: "Order Item successfully deleted!"}, status: :ok }
+      end
+    else # the order is already verified
+      respond_to do |format|
+        format.json { render json: {message: "Cannot delete verified order!"}, status: :unprocessable_entity }
+      end
     end
+    
   end
 
   private
