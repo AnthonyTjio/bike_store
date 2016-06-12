@@ -4,7 +4,7 @@
 <h1>Listing Orders</h1>
 
 
-<a href="/orders/new/"><button class="btn btn-info" style="margin-bottom:10px;">New Order</button></a>
+<a href="/orders/new/"><button class="btn btn-info">New Order</button></a>
 
 <%= javascript_include_tag "angular/controller/orderController" %>
 
@@ -22,11 +22,12 @@
  
 
 
+  <h2> Order List </h2>
   <form>
   <div class="form-group">
     <div class="input-group">
       <div class="input-group-addon"><i class="fa fa-search"></i></div>
-      <input type="text" class="form-control" placeholder="Search Everything Here" ng-model="searchOrder">
+      <input type="text" class="form-control" placeholder="Search Everything Here" ng-model="searchCustomer">
     </div>      
   </div>
 </form>
@@ -61,12 +62,16 @@
       </thead>
       <tbody >
         <form>
-          <tr ng-repeat="o in orders | orderBy:sortType:sortReverse | filter:searchOrder " >
+          <tr ng-repeat="o in orders | orderBy:sortType:sortReverse | filter:searchCustomer " >
             <td id="CustomerID" > {{o.id}} </td>
             <td id="CustomerName" > {{o.customer.customer_name}} </td>
             <td id="ShippingAddress" > {{o.is_paid}} </td>
             <td id="ShippingMethod" > {{o.is_delivered}} </td>
             <td id="Status" > {{o.status}} </td>
+            <td id="Action"> 
+              <input type="button" value="Edit" class="btn btn-default editCustomer" onclick="">
+               <input type="button" value="Delete" class="btn btn-danger deleteCustomer" onclick="" > 
+            </td>
           <!-- <td> <button ng-click="edit(p.productBikeID);">Edit</button> </td>
           <td > <input type="button" value="Save" class="saveBike" > </td>
           <td> <input type="button" value="Delete" class="deleteBike"> </td> -->
@@ -75,7 +80,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="5" class="text-center">Data retrieved from Back-end Ruby on Rails</td>
+        <td colspan="5" class="text-center">Data retrieved from database bike_store table bike_list</td>
       </tr>
     </tfoot>
   </table>

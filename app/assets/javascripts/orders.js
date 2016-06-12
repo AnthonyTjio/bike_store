@@ -10,18 +10,32 @@ function upToItemSection(){
         'slow');
 }
 
+var orderItemTotalPrice = 0;
 function calculateTotalPrice(){
 	// alert('taik');
-	console.log($("#orderItemPrice").val());
-	console.log($("#orderItemQty").val());
+	// console.log($("#orderItemPrice").val());
+	// console.log($("#orderItemQty").val());
 	var price = parseInt($("#orderItemPrice").val());
 	var count = parseInt($("#orderItemQty").val());
-	console.log(price);
-	console.log(count);
+	// console.log(price);
+	// console.log(count);
 	var calculate = price * count;
-	$("#orderItemTotalPrice").val(calculate);
+	orderItemTotalPrice = calculate
+	$("#orderItemTotalPrice").val(orderItemTotalPrice);
 }
 
+function deleteItemFromCart(element){
+	console.log($(".cart-item-price-"+element+"").html());
+	$(".cart-"+element+"").remove();
+	for( var i = 0 ; i < arrayForCheckingCart.length ; i++ )
+	{
+		if(arrayForCheckingCart[i] == element)
+		{
+			arrayForCheckingCart.splice(i,1)
+		}
+	}
+	console.log(arrayForCheckingCart);
+}
 function changeDeleteId(orderItemRow){
 	delId = $(orderItemRow).parent().parent().find(".OrderItemID").html();
 }
@@ -189,10 +203,40 @@ function getProductData(){
 	});
 }
 
+var arrayForCheckingCart = [];
+var locationSameProductID = 0;
+var isSame = false;
+var productIteration = 1;
 function addToCart(){
 	var orderID = $("#orderItemOrderID").val();
 	var productID = $("#orderItemProductID").val();
 	var qty = $("#orderItemQty").val();
+	var i = 0;
+	
+	console.log('panjang array sekarang: '+arrayForCheckingCart.length)
+	while(i < arrayForCheckingCart.length && qty > 0)
+	{
+		console.log('iterasi: '+arrayForCheckingCart[i]);
+		if(arrayForCheckingCart[i] == productID)
+		{
+			console.log("ada yang sama");
+			locationSameProductID = i+1;
+			isSame = true;
+			break;
+		}
+		else
+		{
+			i++;
+		}
+	}
+	
+	if(isSame == false && qty > 0)
+	{
+		console.log('yang di push ke array: '+productID)
+		arrayForCheckingCart.push(productID);
+		console.log(arrayForCheckingCart);
+		console.log(productID)
+	}
 	
 	$.ajax({
 		url:localhost+"/order_items.json",
@@ -204,8 +248,40 @@ function addToCart(){
 			"order_item[qty]": qty
 		},
 		success: function(returnData){
-			// update order items table
 			console.log(returnData);
+			
+			if(isSame == true)
+			{
+				console.log('posisi yagn harus diganti: '+productID)
+				$(".cart-item-qty-"+productID+"").html(returnData.qty);
+				console.log('harga yang seharusnya: '+orderItemTotalPrice);
+				$(".cart-item-total-price-"+productID+"").html(orderItemTotalPrice);
+				
+			}
+			else if(isSame == false)
+			{
+				var html= ''
+				html+= '<tr class="cart-'+productID+'">'
+				html+= '<td class="cart-item-productName-'+productID+'"style="display:none">'
+				html+=  returnData.productName
+				html+= '</td>'
+				html+= '<td class="cart-item-price-'+productID+'">'
+				html+=	returnData.price
+				html+= '</td>'
+				html+= '<td class="cart-item-qty-'+productID+'">'
+				html+=	returnData.qty
+				html+= '</td>'
+				html+= '<td class="cart-item-total-price-'+productID+'">'
+				html+=	orderItemTotalPrice
+				html+= '</td>'
+	            html+= '<td>'
+	            html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteItemFromCart('+productID+')">'
+	            html+= '</td>'
+	            html+= '</tr>'
+	            $(".cart-item").append(html);
+	            // productIteration++;
+			}
+			isSame = false;
 		},
 		error: function(statusText, jqXHR, returnText){
 			var errorMessage = JSON.parse(statusText.responseText).errors;
@@ -221,6 +297,7 @@ function addToCart(){
 }
 
 function confirmOrder(){
+
 	var orderID = $("#orderItemOrderID").val();
 
 	$.ajax({
@@ -231,7 +308,8 @@ function confirmOrder(){
 			"status": true
 		},
 		success: function(returnData){
-			alert("Success: "+returnData.message);	
+			alert("Success: "+returnData.message);
+				$(".payment-section").css("display","block")
 		},
 		error: function(statusText, jqXHR, returnText){
 			console.log(JSON.parse(statusText.responseText).message+" "+returnText);
