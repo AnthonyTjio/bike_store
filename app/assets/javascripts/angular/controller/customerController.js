@@ -1,4 +1,9 @@
   myApp.controller('customerController', ['$scope', '$http', function($scope, $http){
+    
+    $scope.sortType     = ''; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
+    $scope.searchCustomer   = '';     // set the default search/filter term
+    
   $scope.title = "Customer List";
   $http.get(localhost+"/customers.json").then(function(response,status,headers,config){
     $scope.customers = response.data;

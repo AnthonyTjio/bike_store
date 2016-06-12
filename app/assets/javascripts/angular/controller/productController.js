@@ -1,4 +1,6 @@
   myApp.controller('productController', ['$scope', '$http', function($scope, $http){
+    
+    
   $scope.title = "Product List";
   $http.get(localhost+"/products.json").then(function(response,status,headers,config){
     $scope.products = response.data;

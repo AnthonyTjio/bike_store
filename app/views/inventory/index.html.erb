@@ -137,7 +137,7 @@
 
       <div class="form-group">        
         <div class="col-sm-offset-2 col-sm-6">
-          <button type="button" id="buttonAddQty" class="btn btn-default" onclick="addQty()">Submit</button>
+          <button type="button" id="buttonAddQty" class="btn btn-success" onclick="addQty()">Submit</button>
         </div>
       </div>
     </form>
@@ -193,7 +193,7 @@
 
       <div class="form-group">        
         <div class="col-sm-offset-2 col-sm-6">
-          <button type="button" id="buttonAddQty" class="btn btn-default" onclick="reviseQty()">Submit</button>
+          <button type="button" id="buttonAddQty" class="btn btn-success" onclick="reviseQty()">Submit</button>
         </div>
       </div>
     </form>
@@ -244,31 +244,75 @@
 
       <div class="form-group">        
         <div class="col-sm-offset-2 col-sm-6">
-          <button type="button" id="buttonReviseProduct" class="btn btn-default" onclick="editProduct()">Submit</button>
+          <button type="button" id="buttonReviseProduct" class="btn btn-success" onclick="editProduct()">Submit</button>
         </div>
       </div>
     </form>
   </div>
 
-  
+  <form>
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon"><i class="fa fa-search"></i></div>
+      <input type="text" class="form-control" placeholder="Search Everything Here" ng-model="searchProduct">
+    </div>      
+  </div>
+</form>
+
   <!-- table pertama -->  
   <div id="table-responsive-custom">
     <table summary="This table shows file inside database" class="table table-bordered table-hover">
       <caption class="text-center">{{title}}</caption>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Bike name</th>
-          <th>Bike model</th>
-          <th>Stock</th>
-          <th>Price</th>
-          <th>Bike size</th>
+          <th>
+            <a ng-click="sortType = 'product.id'; sortReverse = !sortReverse">
+               ID <span ng-show="sortType == '' && !sortReverse" class="fa fa-caret-down"></span>
+                <span ng-show="sortType == 'product.id' && !sortReverse" class="fa fa-caret-down"></span>
+                <span ng-show="sortType == 'product.id' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'product.bike_name'; sortReverse = !sortReverse">
+            Bike name 
+              <span ng-show="sortType == 'product.bike_name' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortType == 'product.bike_name' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'product.bike_model.bike_model_name'; sortReverse = !sortReverse">
+            Bike model
+              <span ng-show="sortType == 'product.bike_model.bike_model_name' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortType == 'product.bike_model.bike_model_name' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+            </th>
+          <th>
+            <a ng-click="sortType = 'qty'; sortReverse = !sortReverse">
+            Stock
+              <span ng-show="sortType == 'qty' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortType == 'qty' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+            </th>
+          <th>
+            <a ng-click="sortType = 'product.price'; sortReverse = !sortReverse">
+            Price
+              <span ng-show="sortType == 'product.price' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortType == 'product.price' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+            </th>
+          <th>
+            <a ng-click="sortType = 'product.bike_size'; sortReverse = !sortReverse">
+            Bike size
+              <span ng-show="sortType == 'product.bike_size' && !sortReverse" class="fa fa-caret-down"></span>
+              <span ng-show="sortType == 'product.bike_size' && sortReverse" class="fa fa-caret-up"></span>
+            </a>
+            </th>
           <th colspan="4">Actions</th>
         </tr>
       </thead>
       <tbody >
         <form>
-          <tr ng-repeat="s in stocks">
+          <tr ng-repeat="s in stocks| orderBy:sortType:sortReverse | filter:searchProduct">
             <td class="ProductID" > {{s.product.id}} </td>
             <td class="ProductName" > {{s.product.bike_name}} </td>
             <td class="ProductModel" > {{s.product.bike_model.bike_model_name}} </td>
@@ -285,7 +329,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="10" class="text-center">Data retrieved from database bike_store table bike_list</td>
+        <td colspan="10" class="text-center">Data retrieved from Back-end Ruby on Rails</td>
       </tr>
     </tfoot>
   </table>

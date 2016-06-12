@@ -4,7 +4,7 @@
 <h1>Listing Orders</h1>
 
 
-<a href="/orders/new/"><button class="btn btn-info">New Order</button></a>
+<a href="/orders/new/"><button class="btn btn-info" style="margin-bottom:10px;">New Order</button></a>
 
 <%= javascript_include_tag "angular/controller/orderController" %>
 
@@ -22,12 +22,11 @@
  
 
 
-  <h2> Order List </h2>
   <form>
   <div class="form-group">
     <div class="input-group">
       <div class="input-group-addon"><i class="fa fa-search"></i></div>
-      <input type="text" class="form-control" placeholder="Search Everything Here" ng-model="searchCustomer">
+      <input type="text" class="form-control" placeholder="Search Everything Here" ng-model="searchOrder">
     </div>      
   </div>
 </form>
@@ -62,7 +61,7 @@
       </thead>
       <tbody >
         <form>
-          <tr ng-repeat="o in orders | orderBy:sortType:sortReverse | filter:searchCustomer " >
+          <tr ng-repeat="o in orders | orderBy:sortType:sortReverse | filter:searchOrder " >
             <td id="CustomerID" > {{o.id}} </td>
             <td id="CustomerName" > {{o.customer.customer_name}} </td>
             <td id="ShippingAddress" > {{o.is_paid}} </td>
@@ -76,7 +75,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="5" class="text-center">Data retrieved from database bike_store table bike_list</td>
+        <td colspan="5" class="text-center">Data retrieved from Back-end Ruby on Rails</td>
       </tr>
     </tfoot>
   </table>

@@ -6,8 +6,20 @@ function upToCustomerSection(){
 
 function upToItemSection(){
 	$('html,body').animate({
-        scrollTop: $(".customer-section").offset().top},
+        scrollTop: $(".item-section").offset().top},
         'slow');
+}
+
+function calculateTotalPrice(){
+	// alert('taik');
+	console.log($("#orderItemPrice").val());
+	console.log($("#orderItemQty").val());
+	var price = parseInt($("#orderItemPrice").val());
+	var count = parseInt($("#orderItemQty").val());
+	console.log(price);
+	console.log(count);
+	var calculate = price * count;
+	$("#orderItemTotalPrice").val(calculate);
 }
 
 function changeDeleteId(orderItemRow){

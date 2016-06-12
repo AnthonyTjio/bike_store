@@ -131,6 +131,7 @@
                         </div>
                         <div class="col-md-4 item-to-add">
                             <select id="orderItemProductID" class="form-control" onchange="getProductData()">
+                                <option value="-">------</option>
                               <%= Product.all.order(:bike_name).each do |product| %>
                                 <option value="<%= product.id%>"><%= product.bike_name%></option>
                               <% end %>
@@ -155,7 +156,7 @@
                             Qty: 
                         </div>
                         <div class="col-md-4 item-to-add">
-                            <input type="number" class="form-control" id="orderItemQty" minimum="1"/>
+                            <input type="number" class="form-control" id="orderItemQty" minimum="1" onchange="calculateTotalPrice()"/>
                         </div>
                         <div class="col-md-6 item-to-add">
                             <span id="order_item_qty_header" style="color: red;" hidden>Qty </span>
@@ -180,7 +181,7 @@
                             
                         </div>
                         <div class="col-md-4 item-to-add">
-                          <input type="button" name="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart()">
+                          <input type="button" name="Add To Cart" value="Tai kucing" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart()">
                         </div>
                         <div class="col-md-6 item-to-add">
                            
@@ -216,7 +217,7 @@
                             </tbody>
                             <tfoot>
                               <tr>
-                                <td colspan="5" class="text-center">Data retrieved from database bike_store table bike_list</td>
+                                <td colspan="5" class="text-center">Data retrieved from Back-end Ruby on Rails</td>
                               </tr>
                             </tfoot>
                           </table>
