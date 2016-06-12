@@ -217,6 +217,14 @@ class OrdersController < ApplicationController
     end
   end
 
+  def generate_invoice
+
+  end
+
+  def generate_letter_of_travel
+
+  end
+
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update

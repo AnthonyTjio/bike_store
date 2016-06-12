@@ -35,6 +35,8 @@ Rails.application.routes.draw do
   post 'orders/verify_order'
   post 'orders/confirm_payment'
   post 'orders/confirm_delivery'
+  get 'orders/generate_invoice'
+  get 'orders/generate_letter_of_travel'
 
   get 'order_items/index'
   get 'bike_models/index'
