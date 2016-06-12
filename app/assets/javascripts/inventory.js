@@ -218,7 +218,9 @@ function getProductHistory(){
 	var startDate = $('#productHistoryStartingDate').val();
 	var endDate = $('#productHistoryEndingDate').val();
 	
-	$("#product_history_track").empty();
+	$("#history-tracking").empty();
+	$("#starting-stock").empty();
+	$("#ending-stock").empty();
 
 	$.ajax({	
 		url: localhost+"/inventory/product_history.json",
@@ -232,28 +234,60 @@ function getProductHistory(){
 			var report = returnData.product_track;
 			var starting_stock = returnData.starting_stock;
 			var ending_stock = returnData.ending_stock;
+			
+			var stock_track = starting_stock;
 
 			
-			var table_data = "";
-			table_data += "Starting Stock: "+starting_stock+"<br />";
-			table_data += "Ending Stock: "+ending_stock+"<br />";
-
+			//var table_data = "";
+			$("#starting-stock").html(starting_stock);
+			$("#ending-stock").html(ending_stock);
+	
+			var html = ''
 			$.each(report, function (d, data){
+				console.log(data);
 				var date = new Date(data.created_at);
-
-				table_data +="<ul><li>Updated On: "+dateFormat(date, "mm/dd/yyyy")+"</td>";
+				html += '<tr>'	
+				html += '<td>'
+				html += dateFormat(date, "mm/dd/yyyy")
+				html += '</td>'
+				
+				//table_data +="<ul><li>Updated On: "+dateFormat(date, "mm/dd/yyyy")+"</td>";
 				if(data.alteration>0){
-					table_data +="<li>Status: In</li>";
-					table_data +="<li>Changes: "+data.alteration+"</li>";
+					html += '<td>'
+					html += 'In'
+					html += '</td>'
+					html += '<td>'
+					html += stock_track
+					html += '</td>'
+					html += '<td>'
+					html += data.alteration
+					html += '</td>'
 				}
 				else{
-					table_data +="<li>Status: Out</li>";
-					table_data +="<li>Changes: "+(data.alteration*-1)+"</li>";
+					html += '<td>'
+					html += 'Out'
+					html += '</td>'
+					html += '<td>'
+					html += stock_track
+					html += '</td>'
+					html += '<td>'
+					html += (data.alteration*-1)
+					html += '</td>'
+					// table_data +="<li>Status: Out</li>";
+					// table_data +="<li>Changes: "+(data.alteration*-1)+"</li>";
 				}
-				table_data +="<li>Description: "+data.description+"</li></ul>";
+				stock_track += data.alteration;
+				html += '<td>'
+				html += stock_track
+				html += '</td>'
+				html += '<td>'
+				html += data.description
+				html += '</td>'
+				// table_data +="<li>Description: "+data.description+"</li></ul>";
+				html += '</tr>'
 			});
 
-			$('#product_history_track').append(table_data);
+			$('#history-tracking').html(html);
 
 
 		}

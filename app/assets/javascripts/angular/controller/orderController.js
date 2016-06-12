@@ -3,8 +3,12 @@ myApp.controller('orderController', ['$scope', '$http', function($scope, $http){
     $scope.sortType     = ''; // set the default sort type
     $scope.sortReverse  = false;  // set the default sort order
     $scope.searchOrder   = '';     // set the default search/filter term
-    
-$http.get(localhost+"/orders.json").then(function(response,status,headers,config){
+  
+    $scope.painting = function(){
+        console.log("lala")
+        // $(".IsPaid").css("font-color","red");
+    }
+    $http.get(localhost+"/orders.json").then(function(response,status,headers,config){
         $scope.orders = response.data;
         console.log($scope.orders)
       },function(data,status,headers, config){

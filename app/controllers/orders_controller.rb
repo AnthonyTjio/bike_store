@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
   end
 
   def retrieve_cart
-    @order = Order.find_by(params[:id])
+    @order = Order.find_by_id(params[:id])
 
     if(@order)
       @order_items = OrderItem.where(order_id: @order.id)
@@ -49,7 +49,7 @@ class OrdersController < ApplicationController
   end
 
   def verify_order
-    @order = Order.find(order_params[:id])
+    @order = Order.find_by(order_params[:id])
     @order_items = OrderItem.where(:order_id => @order.id)
 
     if (@order.pre_order? )
@@ -80,7 +80,7 @@ class OrdersController < ApplicationController
               # Creates Documentation
               stock_history = StockHistory.new
               stock_history.stock_id = checked_stock.id
-              stock_history.alteration = item.qty
+              stock_history.alteration = item.qty*-1
               stock_history.description = "Ordered by "+@order.customer.customer_name.to_s+" on order #"+@order.id.to_s
 
               # Edit Current Stock
@@ -162,7 +162,7 @@ class OrdersController < ApplicationController
     shipping_method = order_params[:shipping_method]
 
     print = true
-    if (@order.pre_order?) # if the order hasn't verified, they cannot pay
+    if (@order.pre_order?) # if the order hasn't verified, they cannot deliver
       print = false
       respond_to do |format|
         format.json { render json: {errors: "The order is not verified yet"}, status: :unprocessable_entity }
@@ -172,6 +172,7 @@ class OrdersController < ApplicationController
       respond_to do |format|
         format.json { render json: {errors: "Cannot update cancelleded order"}, status: :unprocessable_entity }
       end
+    
     elsif (@order.active_order?)
 
       if @order.shipping_date.nil?
@@ -187,7 +188,7 @@ class OrdersController < ApplicationController
       end
 
       if ( (@order.is_paid) && (@order.shipping_date.present?) && (@order.shipping_address.present?) && (@order.shipping_method.present?))
-        @order.is_delivered
+        @order.is_delivered = true
       else
         print = false
         respond_to do |format|
@@ -290,16 +291,23 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    if !@order.finished
-      @order.cancelled!
-
-      @order.update
-      respond_to do |format|
-        format.json { render json: {message: "The order is cancelleded"}, status: :ok }
+    @user=  User.find(session[:user_id])
+    if ((@user)&&(@user.user_type=="Admin"))
+      if !@order.finished?
+        @order.cancelled!
+  
+        @order.save
+        respond_to do |format|
+          format.json { render json: {message: "The order is cancelled"}, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.json { render json: {message: "Cannot cancelled finished order"}, status: :unprocessable_entity }
+        end
       end
-    else
+    else # not admin
       respond_to do |format|
-        format.json { render json: {message: "Cannot cancelled finished order"}, status: :unprocessable_entity }
+        format.json { render json: {message: "Only admin can delete orders"}, status: :unprocessable_entity }
       end
     end
   end
