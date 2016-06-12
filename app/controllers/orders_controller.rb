@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
   end
 
   def retrieve_cart
-    @order = Order.find(params[:id])
+    @order = Order.find_by(params[:id])
 
     if(@order)
       @order_items = OrderItem.where(order_id: @order.id)
