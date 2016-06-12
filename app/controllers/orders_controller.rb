@@ -20,6 +20,22 @@ class OrdersController < ApplicationController
     @order_items = OrderItem.where(order_id: @order.id)
   end
 
+  def retrieve_cart
+    @order = Order.find(params[:id])
+
+    if(@order)
+      @order_items = OrderItem.where(order_id: @order.id)
+      respond_to do |format|
+        format.json { render :item, status: :ok}
+      end
+    else
+      respond_to do |format|
+        format.json { render json: {errors: "Order ID not found"}, status: :ok}
+      end
+    end
+
+  end
+
   # GET /orders/new
   def new
     @order = Order.new
@@ -29,6 +45,7 @@ class OrdersController < ApplicationController
   # GET /orders/1/edit
   def edit
     @customer = Customer.find_by(id: @order.customer_id)
+
   end
 
   def verify_order
@@ -228,15 +245,24 @@ class OrdersController < ApplicationController
         end
       end
     else
-      respond_to do |format|
-        format.pdf {render json: {errors: "The order is not paid"}, status: :unprocessable_entity
-        }
-      end
+      render json: {errors: "The order is not paid"}, status: :unprocessable_entity
     end
+
   end
 
   def letter_of_travel
+    @order = Order.find(params[:id])
 
+    if @order.is_paid
+      respond_to do |format|
+        format.pdf do
+          render pdf: "Letter of Travel ##{@order.id}",
+            template: "orders/letter_of_travel.html.erb"
+        end
+      end
+    else
+      render json: {errors: "The order is not delivered"}, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /orders/1
@@ -276,9 +302,9 @@ class OrdersController < ApplicationController
         format.json { render json: {message: "Cannot cancelled finished order"}, status: :unprocessable_entity }
       end
     end
-    
-    
   end
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

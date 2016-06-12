@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   get 'customers/index'
 
   get 'orders/index'
+  get 'orders/:id/retrieve_cart' => 'orders#retrieve_cart'
   post 'orders/verify_order'
   post 'orders/confirm_payment'
   post 'orders/confirm_delivery'

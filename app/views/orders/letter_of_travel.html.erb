@@ -1,31 +1,50 @@
-<div class="row">
-    <div class="col-md-6 text-left pull-left">
-        <h3>Jaret and Emon Shop</h3>
-        <h2><small>Jl.maafsayagampangkhilaf.No.$</small></h2>
-        <h2><small>Kebayoran Baru, South Jakarta</small></h2>
-    </div>
+<!DOCTYPE html>
+<html>
+<head>
 
-    <div class="row">
-        <div class="col-md-6 text-right pull-right">
-          <h3>Kepada Yth....</h3>
-          <h2><small>Toko meki</small></h2>
-          <h2><small>Jl.mankogadaisuki no.71717</small></h2>
-      </div>
+  <title>Invoice #<%=@order.id%></title>
 
-  </div>
-
-  <div class="page-header">
-
+  <%= wicked_pdf_stylesheet_link_tag 'application.css', media: 'all', 'data-turbolinks-track' => true %>
+  <%= wicked_pdf_stylesheet_link_tag "pdf.css" -%>
+</head>
+<body>
 
     <div class="container">
+        
+
         <div class="row">
-            <div class="col-md-12">
-                <div class="text-center">
-                    <h2>Letter of Travel</h2>
+            <div class="page-header pull-left">
+                <h1 style="text-align: left">Hantze Shop</h1>
+                <h4><small>Jl.Hantze 52</small></h4>
+                <h4><small>Kebayoran Baru, South Jakarta</small></h4>  
+                <h4><small>Telp: 021-1234098</small></h4>  
+            </div>
+
+            <div class="page-header pull-right">
+
+                <br/>
+                <div class="panel-heading" style="background-color:darkgrey;">
+                    <b>Billing Details</b>
                 </div>
 
+                <div class="panel-body">
+                    <b>Name:</b> <%= @order.customer.customer_name %><br/>
+                    <b>Customer Address:</b> <%= @order.customer.customer_address%><br/>
+                    <b>Customer Phone:</b> <%= @order.customer.customer_phone %>
+                </div>
+            </div>
 
-                <hr>
+             <div class="container">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-center">
+                            <h2>Invoice for Purchase #<%=@order.id%></h2>
+                        </div>
+                        <hr>
+                        
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-md-12">
@@ -35,10 +54,9 @@
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered">
+                                    <table class="table table-condensed">
                                         <thead>
                                             <tr>
-                                                <td><strong>No</strong></td>
                                                 <td><strong>Item Name</strong></td>
                                                 <td class="text-center"><strong>Item Price</strong></td>
                                                 <td class="text-center"><strong>Item Quantity</strong></td>
@@ -46,47 +64,30 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <% total = 0 %>
+                                            <% @order.order_item.each do |item| %>
+                                            <% 
+                                                subtotal = item.price*item.qty
+                                                total += subtotal
+                                            %>
                                             <tr>
-                                                <td>1</td>
-                                                <td>Goodsmile Sonico </td>
-                                                <td class="text-center">Rp 1.000.000</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-right">Rp 1.000.000</td>
+                                                <td><%=item.product.bike_name%></td>
+                                                <td class="text-center">Rp <%=item.price%></td>
+                                                <td class="text-center"><%=item.qty%></td>
+                                                <td class="text-right">Rp <%=subtotal%></td>
                                             </tr>
+                                            <% end %>
                                             <tr>
-                                                <td>2</td>
-                                                <td>Figma Sonico</td>
-                                                <td class="text-center">Rp 800.000</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-right">Rp 800.000</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Screen Protector "Sultan"</td>
-                                                <td class="text-center">Rp 10.000.000</td>
-                                                <td class="text-center">4</td>
-                                                <td class="text-right">Rp.40.000.000</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="highrow"></td>
-                                                <td class="highrow"></td>
-                                                <td class="highrow"></td>
-                                                <td class="highrow text-center"><strong>Subtotal</strong></td>
-                                                <td class="highrow text-right">Rp 41.800.000</td>
+                                                <td class="emptyrow"><br/></td>
+                                                <td class="emptyrow"></td>
+                                                <td class="emptyrow"></td>
+                                                <td class="emptyrow"></td>
                                             </tr>
                                             <tr>
                                                 <td class="emptyrow"></td>
                                                 <td class="emptyrow"></td>
-                                                <td class="emptyrow"></td>
-                                                <td class="emptyrow text-center"><strong>Shipping</strong></td>
-                                                <td class="emptyrow text-right">Rp 100.000</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="emptyrow"></td>
-                                                <td class="emptyrow"></td>
-                                                <td class="emptyrow"></td>
-                                                <td class="emptyrow text-center"><strong>Total</strong></td>
-                                                <td class="emptyrow text-right">Rp 41.900.000</td>
+                                                <td class="emptyrow text-center"><strong>Grand Total</strong></td>
+                                                <td class="emptyrow text-right"><strong>Rp <%= total %></strong></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -95,36 +96,39 @@
                         </div>
                     </div>
                 </div>
+                <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="text-right">
+                                    <h4>Jakarta,...................</h4>
+                                </div>
+                            </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="text-right">
-                            <h4>Jakarta,...................</h4>
+                            <hr>
+
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <td class="text-center"><strong>Penerima</strong></td>
+                                            <td class="text-center"><strong>Pengirim</strong></td>
+                                            <td class="text-center"><strong>Mengetahui</strong></td>
+                                        </tr>
+                                    </thead>
+
+
+                                    <tr>
+                                        <td class="text-center" style="padding-top: 100px; border:0;">_________________</td>
+                                        <td class="text-center" style="padding-top: 100px; border:0;">_________________</td>
+                                        <td class="text-center" style="padding-top: 100px; border:0;">_________________</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="table-responsive">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <td class="text-center"><strong>Penerima</strong></td>
-                                    <td class="text-center"><strong>Pengirim</strong></td>
-                                    <td class="text-center"><strong>Mengetahui</strong></td>
-                                </tr>
-                            </thead>
-
-
-                            <tr>
-                                <td class="text-center" style="padding-top: 100px; border:0;">_________________</td>
-                                <td class="text-center" style="padding-top: 100px; border:0;">_________________</td>
-                                <td class="text-center" style="padding-top: 100px; border:0;">_________________</td>
-                            </tr>
-                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</body>
+</html>

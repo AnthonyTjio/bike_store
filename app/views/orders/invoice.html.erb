@@ -74,9 +74,9 @@
                                             %>
                                             <tr>
                                                 <td><%=item.product.bike_name%></td>
-                                                <td class="text-center"><%=item.price%></td>
+                                                <td class="text-center">Rp <%=item.price%></td>
                                                 <td class="text-center"><%=item.qty%></td>
-                                                <td class="text-right"><%=subtotal%></td>
+                                                <td class="text-right">Rp <%=subtotal%></td>
                                             </tr>
                                             <% end %>
                                             <tr>
@@ -89,7 +89,7 @@
                                                 <td class="emptyrow"></td>
                                                 <td class="emptyrow"></td>
                                                 <td class="emptyrow text-center"><strong>Grand Total</strong></td>
-                                                <td class="emptyrow text-right"><strong><%= total %></strong></td>
+                                                <td class="emptyrow text-right"><strong>Rp <%= total %></strong></td>
                                             </tr>
                                         </tbody>
                                     </table>
