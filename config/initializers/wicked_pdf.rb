@@ -7,6 +7,18 @@
 # To learn more, check out the README:
 #
 # https://github.com/mileszs/wicked_pdf/blob/master/README.md
+=begin
+
+	platform = RUBY_PLATFORM 
+
+	if platform.include?("darwin") # OS X machine 
+	  binary_path = Rails.root.join('bin', 'wkhtmltopdf-0.9.9-OS-X-i386').to_s 
+	elsif platform.include?("64-linux") # 64-bit linux machine 
+	  binary_path = Rails.root.join('bin', 'wkhtmltopdf-amd64').to_s 
+	end 
+
+=end
+
 
 WickedPdf.config = {
   # Path to the wkhtmltopdf executable: This usually isn't needed if using
@@ -19,4 +31,5 @@ WickedPdf.config = {
   # (but can be overridden in `render :pdf` calls)
   # layout: 'pdf.html',
   exe_path: '/usr/local/bin/wkhtmltopdf'
+  # :exe_path => binary_path
 }

@@ -217,11 +217,25 @@ class OrdersController < ApplicationController
     end
   end
 
-  def generate_invoice
+  def invoice
+    @order = Order.find(params[:id])
 
+    if @order.is_paid
+      respond_to do |format|
+        format.pdf do
+          render pdf: "Invoice ##{@order.id}",
+            template: "orders/invoice.html.erb"
+        end
+      end
+    else
+      respond_to do |format|
+        format.pdf {render json: {errors: "The order is not paid"}, status: :unprocessable_entity
+        }
+      end
+    end
   end
 
-  def generate_letter_of_travel
+  def letter_of_travel
 
   end
 
