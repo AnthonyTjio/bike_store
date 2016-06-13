@@ -178,7 +178,7 @@
                             
                         </div>
                         <div class="col-md-4 item-to-add">
-                          <input type="button" value="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart(); calculateGrandTotal();" >
+                          <input type="button" value="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart();" >
                         </div>
                         <div class="col-md-6 item-to-add">
                            
@@ -211,7 +211,7 @@
                             </tfoot>
                           </table>
                         </div><!--end of .table-responsive-->
-                            <div style="text-align:right;"><h4>Grand Total:<span class="grand-total"></span></h4></div>
+                            <div style="text-align:right; padding-right: 20px;"><h4>Grand Total: <span class="grand-total"></span></h4></div>
                             <% if @order.pre_order? %>
                             <input type="button" name="Save Order" id="saveOrderButton" value="Save" class="btn btn-success" onclick="saveOrderInformation()">
                             <input type="button" name="Confirm Order" id="confirmOrderButton" value="Next" class="btn btn-success" onclick="confirmOrder()">

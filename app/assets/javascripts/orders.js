@@ -3,7 +3,6 @@ function retrieveDataDetailView(orderID){
 		url: localhost+"/orders/"+orderID+"/retrieve_cart.json",
 		type: "GET",
 		success: function(returnData){
-			console.log(returnData);
 			
 			for(var i = 0 ; i < returnData.length; i++)
 			{
@@ -35,12 +34,14 @@ function retrieveDataDetailView(orderID){
 	            html+= '</tr>'
 	            $(".cart-item").append(html);
 			}
+			console.log(arrayForCheckingCart.length);
+			calculateGrandTotal()
 		},
 		error: function(statusText, jqXHR, returnText){
 			alert(statusText.responseText.message);
 		}
 	})
-	calculateGrandTotal()
+	
 }
 
 function editOrder(element){
@@ -96,12 +97,16 @@ function calculateTotalPrice(){
 }
 
 function calculateGrandTotal(){
+	console.log(arrayForCheckingCart.length);
 	var totalItem = arrayForCheckingCart.length;
-	console.log(totalItem)
+	console.log('barang yang harus dihitung: '+totalItem)
 	var calc = 0;
 	for( var i=0 ; i < totalItem ; i++)
 	{
-		calc += parseInt($(".cart-item-total-price-"+i).html)
+		var a = i+1;
+		console.log('angka dari a: '+a);
+		console.log($(".cart-item-total-price-"+a+"").html());
+		calc += parseInt($(".cart-item-total-price-"+a+"").html());
 	}
 	console.log(calc);
 	$(".grand-total").html(calc);
@@ -118,6 +123,7 @@ function deleteItemFromCart(element){
 		}
 	}
 	console.log(arrayForCheckingCart);
+	calculateGrandTotal();
 }
 function changeDeleteId(orderItemRow){
 	delId = $(orderItemRow).parent().parent().find(".OrderItemID").html();
@@ -369,7 +375,7 @@ function addToCart(){
 	            // productIteration++;
 	            grandTotal += orderItemTotalPrice;
 			}
-			
+			calculateGrandTotal()
 			isSame = false;
 		},
 		error: function(statusText, jqXHR, returnText){
