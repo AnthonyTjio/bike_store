@@ -9,6 +9,33 @@
 </head>
 <body>
 	<div class="container">
+    <div class="row">
+        <div class="page-header pull-left">
+            <h1 style="text-align: left">Hantze Shop</h1>
+            <h4><small>Jl.Hantze 52</small></h4>
+            <h4><small>Kebayoran Baru, South Jakarta</small></h4>  
+            <h4><small>Telp: 021-1234098</small></h4>  
+        </div>
+
+        <div class="page-header pull-right">
+
+                <br/>
+                <div class="panel-heading" style="background-color:darkgrey;">
+                    <b>Report Details</b>
+                </div>
+
+                <div class="panel-body">
+                	<b>Product ID:</b> <%= @product.id %>
+                    <b>Product Name:</b> <%= @product.bike_name %><br/>
+                    <b>Product Model:</b> <%= @product.bike_model.model_name %> <br/>
+                    <b>Bike Size:</b> <%= @product.bike_size %><br/>
+                    <b>Product Price:</b> <%= @product.price %><br/>
+                    <b>Start Date:</b> <%= @start_date %> <br/>
+                    <b>End Date: </b> <%= @end_date %>
+                </div>
+
+        </div>
+
 	<div class="item content" id="content_section10">
     		<div class="container">
     			<div class="row">
@@ -55,5 +82,6 @@
     			</div><!-- /.row -->
     		</div><!-- /.container -->
     	</div><!-- /.item -->
+    </div>
     </div>
 </body>

@@ -294,7 +294,29 @@ class OrdersController < ApplicationController
   def destroy
     @user=  User.find(session[:user_id])
     if ((@user)&&(@user.user_type=="Admin"))
-      if !@order.finished?
+      if ((!@order.finished?) || (!@order.cancelled?))
+        if @order.active_order?
+            @order_items = OrderItem.where(:order_id => @order.id)
+
+            @order_items.each do |item| # remake tapi udah jalan
+              checked_product = Product.find_by_id(item.product_id)
+              checked_stock = Stock.find_by(product_id: checked_product.id)        
+
+              # Creates Documentation
+              stock_history = StockHistory.new
+              stock_history.stock_id = checked_stock.id
+              stock_history.alteration = item.qty
+              stock_history.description = "Order Cancelled by "+@order.customer.customer_name.to_s+" on order #"+@order.id.to_s
+
+              # Edit Current Stock
+              checked_stock.qty = checked_stock.qty + item.qty
+
+              # Save changes
+              stock_history.save
+              checked_stock.save 
+            end #
+        end
+
         @order.cancelled!
   
         @order.save
