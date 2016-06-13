@@ -18,7 +18,7 @@ function retrieveDataDetailView(orderID){
 				html+=  returnData[i].product_name
 				html+= '</td>'
 				html+= '<td class="cart-item-price-'+returnData[i].product_id+'">'
-				html+=	"$ "+returnData[i].price
+				html+=	returnData[i].price
 				html+= '</td>'
 				html+= '<td class="cart-item-qty-'+returnData[i].product_id+'">'
 				html+=	returnData[i].qty
@@ -27,7 +27,7 @@ function retrieveDataDetailView(orderID){
 				html+=	returnData[i].current_stock
 				html+= '</td>'
 				html+= '<td class="cart-item-total-price-'+returnData[i].product_id+'">'
-				html+=	"$ "+count
+				html+=	count
 				html+= '</td>'
 	            html+= '<td>'
 	            //html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteItemFromCart('+returnData[i].product_id+'); deleteOrderItem(this);">'
@@ -66,7 +66,7 @@ function deleteOrder(element){
 		error: function(statusText, jqXHR, returnText){
 			alert(statusText.responseText.message);
 		}
-		
+	
 	});
 }
 
@@ -105,7 +105,8 @@ function calculateGrandTotal(){
 	var calc = 0;
 	for( var i=0 ; i < totalItem ; i++)
 	{
-		var a = i+1;
+		console.log(arrayForCheckingCart)
+		var a = arrayForCheckingCart[i];
 		console.log('angka dari a: '+a);
 		console.log($(".cart-item-total-price-"+a+"").html());
 		calc += parseInt($(".cart-item-total-price-"+a+"").html());
@@ -359,7 +360,7 @@ function addToCart(){
 				html+=  returnData.product_name
 				html+= '</td>'
 				html+= '<td class="cart-item-price-'+productID+'">'
-				html+=	"$ "+returnData.price
+				html+=	returnData.price
 				html+= '</td>'
 				html+= '<td class="cart-item-qty-'+productID+'">'
 				html+=	returnData.qty
@@ -368,7 +369,7 @@ function addToCart(){
 				html+=	returnData.current_stock
 				html+= '</td>'
 				html+= '<td class="cart-item-total-price-'+productID+'">'
-				html+=	"$ "+orderItemTotalPrice
+				html+=	orderItemTotalPrice
 				html+= '</td>'
 	            html+= '<td>'
 	            html+= '<input type="button" value="Delete" data-toggle="modal" class="btn btn-danger" data-target="#deleteConfirm" onclick="deleteOrderItem(this,'+productID+'); deleteOrderItem(this);">'

@@ -1,8 +1,6 @@
 <%= javascript_include_tag "angular/controller/orderController" %>
 <%= javascript_include_tag "angular/controller/stockController" %>
 
-<h2> Sales (Tar ada diagram expenditure & income) </h2>
-
  <div ng-controller="orderController">
   <h2> New Orders </h2>
   <!-- table pertama -->  
@@ -34,7 +32,7 @@
             <td id="CustomerID" > {{o.customer.customer_name}} </td>
             <td id="ShippingAddress" > {{o.shipping_address}} </td>
             <td id="ShippingMethod" > {{o.shipping_method}} </td>
-            <td id="OrderDate" > {{o.order_time}} </td>
+            <td id="OrderDate" > {{o.order_date}} </td>
             <td id="Status" > {{o.status}} </td>
           <!-- <td> <button ng-click="edit(p.productBikeID);">Edit</button> </td>
           <td > <input type="button" value="Save" class="saveBike" > </td>

@@ -1,4 +1,6 @@
-  myApp.controller('modelController', ['$scope', '$http', function($scope, $http){
+var ok = 0;
+myApp.controller('modelController', ['$scope', '$http', function($scope, $http){
+    ok = 1;
     $scope.sortType     = ''; // set the default sort type
     $scope.sortReverse  = false;  // set the default sort order
     $scope.searchModel   = '';     // set the default search/filter term
@@ -11,3 +13,6 @@
   });
 }]);
 
+setTimeout(function(){ 
+    if(ok==0) window.location.reload(true); 
+}, 100);

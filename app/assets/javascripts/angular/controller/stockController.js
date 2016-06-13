@@ -1,4 +1,6 @@
+var ok = 0;
 myApp.controller('stockController', ['$scope', '$http', function($scope, $http){
+  ok = 1;
   $scope.title = "Stocks";
   $scope.totalQty = function(){
     
@@ -13,3 +15,7 @@ myApp.controller('stockController', ['$scope', '$http', function($scope, $http){
   	alert(data+" "+status+" "+headers+" "+config);
   });
 }]);
+
+setTimeout(function(){ 
+    if(ok==0) window.location.reload(true); 
+}, 100);

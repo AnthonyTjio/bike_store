@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   get 'kucings/tikus'
 
-  get 'home/index'
+  get 'home/index' => 'home#index'
   get 'home/login'
   get 'home/logout'
   get 'home/signup'
