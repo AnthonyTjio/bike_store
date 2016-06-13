@@ -49,8 +49,10 @@ class OrdersController < ApplicationController
   end
 
   def verify_order
-    @order = Order.find_by(order_params[:id])
+    @order = Order.find_by_id(order_params[:id])
     @order_items = OrderItem.where(:order_id => @order.id)
+
+    puts @order.status
 
     if (@order.pre_order? )
 
@@ -175,17 +177,9 @@ class OrdersController < ApplicationController
     
     elsif (@order.active_order?)
 
-      if @order.shipping_date.nil?
-        @order.shipping_date = shipping_date
-      end
-
-      if @order.shipping_address.nil?
-        @order.shipping_address = shipping_address
-      end
-
-      if @order.shipping_method.nil?
-        @order.shipping_method = shipping_method
-      end
+      @order.shipping_date = shipping_date
+      @order.shipping_address = shipping_address
+      @order.shipping_method = shipping_method
 
       if ( (@order.is_paid) && (@order.shipping_date.present?) && (@order.shipping_address.present?) && (@order.shipping_method.present?))
         @order.is_delivered = true
@@ -271,15 +265,22 @@ class OrdersController < ApplicationController
   def update
     @order = Order.find(params[:id])
     if((@order.active_order?)&&(!@order.is_delivered))
+      puts @order.shipping_date
+
       @order.shipping_method = order_details_params[:shipping_method]
       @order.shipping_address = order_details_params[:shipping_address]
 
       dummy_shipping_date = order_details_params[:shipping_date] 
-      dummy_shipping_date[0], dummy_shipping_date[3] = dummy_shipping_date[3], dummy_shipping_date[0]
-      dummy_shipping_date[1], dummy_shipping_date[4] = dummy_shipping_date[4], dummy_shipping_date[1]  
 
-      @order.shipping_date = DateTime.parse(dummy_shipping_date)
+      if(dummy_shipping_date.present?)
+        dummy_shipping_date[0], dummy_shipping_date[3] = dummy_shipping_date[3], dummy_shipping_date[0]
+        dummy_shipping_date[1], dummy_shipping_date[4] = dummy_shipping_date[4], dummy_shipping_date[1]  
 
+        @order.shipping_date = DateTime.parse(dummy_shipping_date)
+      else
+      
+      end
+      puts @order.shipping_date
       @order.save
     end
 
@@ -293,7 +294,29 @@ class OrdersController < ApplicationController
   def destroy
     @user=  User.find(session[:user_id])
     if ((@user)&&(@user.user_type=="Admin"))
-      if !@order.finished?
+      if ((!@order.finished?) || (!@order.cancelled?))
+        if @order.active_order?
+            @order_items = OrderItem.where(:order_id => @order.id)
+
+            @order_items.each do |item| # remake tapi udah jalan
+              checked_product = Product.find_by_id(item.product_id)
+              checked_stock = Stock.find_by(product_id: checked_product.id)        
+
+              # Creates Documentation
+              stock_history = StockHistory.new
+              stock_history.stock_id = checked_stock.id
+              stock_history.alteration = item.qty
+              stock_history.description = "Order Cancelled by "+@order.customer.customer_name.to_s+" on order #"+@order.id.to_s
+
+              # Edit Current Stock
+              checked_stock.qty = checked_stock.qty + item.qty
+
+              # Save changes
+              stock_history.save
+              checked_stock.save 
+            end #
+        end
+
         @order.cancelled!
   
         @order.save

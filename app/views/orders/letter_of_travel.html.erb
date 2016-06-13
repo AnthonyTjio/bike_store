@@ -24,14 +24,16 @@
 
                 <br/>
                 <div class="panel-heading" style="background-color:darkgrey;">
-                    <b>Billing Details</b>
+                    <b>Delivery Details</b>
                 </div>
 
                 <div class="panel-body">
                     <b>Name:</b> <%= @order.customer.customer_name %><br/>
-                    <b>Customer Address:</b> <%= @order.customer.customer_address%><br/>
-                    <b>Customer Phone:</b> <%= @order.customer.customer_phone %>
+                    <b>Delivery Method:</b> <%= @order.shipping_method=="on_the_spot" ? "On the spot" : "Company delivery"%><br/>
+                    <b>Delivery Address:</b> <%= @order.shipping_address%><br/>                    
+                    <b>Delivery Date:</b> <%= @order.shipping_date %>
                 </div>
+
             </div>
 
              <div class="container">
@@ -72,9 +74,9 @@
                                             %>
                                             <tr>
                                                 <td><%=item.product.bike_name%></td>
-                                                <td class="text-center">Rp <%=item.price%></td>
+                                                <td class="text-center">$ <%=item.price%></td>
                                                 <td class="text-center"><%=item.qty%></td>
-                                                <td class="text-right">Rp <%=subtotal%></td>
+                                                <td class="text-right">$ <%=subtotal%></td>
                                             </tr>
                                             <% end %>
                                             <tr>
@@ -87,7 +89,7 @@
                                                 <td class="emptyrow"></td>
                                                 <td class="emptyrow"></td>
                                                 <td class="emptyrow text-center"><strong>Grand Total</strong></td>
-                                                <td class="emptyrow text-right"><strong>Rp <%= total %></strong></td>
+                                                <td class="emptyrow text-right"><strong>$ <%= total %></strong></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -110,9 +112,9 @@
                                 <table class="table table-condensed">
                                     <thead>
                                         <tr>
-                                            <td class="text-center"><strong>Penerima</strong></td>
-                                            <td class="text-center"><strong>Pengirim</strong></td>
-                                            <td class="text-center"><strong>Mengetahui</strong></td>
+                                            <td class="text-center"><strong>Buyer</strong></td>
+                                            <td class="text-center"><strong>Sender</strong></td>
+                                            <td class="text-center"><strong>Manager</strong></td>
                                         </tr>
                                     </thead>
 

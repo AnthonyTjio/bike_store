@@ -253,7 +253,7 @@ function getProductHistory(){
 				
 				//table_data +="<ul><li>Updated On: "+dateFormat(date, "mm/dd/yyyy")+"</td>";
 				if(data.alteration>0){
-					html += '<td>'
+					html += '<td style="color: green">'
 					html += 'In'
 					html += '</td>'
 					html += '<td>'
@@ -264,7 +264,7 @@ function getProductHistory(){
 					html += '</td>'
 				}
 				else{
-					html += '<td>'
+					html += '<td style="color: red">'
 					html += 'Out'
 					html += '</td>'
 					html += '<td>'
@@ -293,3 +293,15 @@ function getProductHistory(){
 		}
 	});
 }
+
+ function productHistoryPDF(){
+ 	var product = $('#reviseProductID').val();
+	var startDate = $('#productHistoryStartingDate').val();
+	var endDate = $('#productHistoryEndingDate').val();
+
+	$("#generateFormProduct").val(product);
+	$("#generateFormStart").val(startDate);
+	$("#generateFormEnd").val(endDate);
+
+	$("#generateForm").submit();
+ }
