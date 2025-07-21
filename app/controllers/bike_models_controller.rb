@@ -32,7 +32,7 @@ class BikeModelsController < ApplicationController
         format.json { render :show, status: :created, location: @bike_model }
       else
         format.html { render :new }
-        format.json { render json: @bike_model.errors, status: :unprocessable_entity }
+        format.json { render json: [errors: @bike_model.errors], status: :unprocessable_entity }
       end
     end
   end
@@ -46,7 +46,7 @@ class BikeModelsController < ApplicationController
         format.json { render :show, status: :ok, location: @bike_model }
       else
         format.html { render :edit }
-        format.json { render json: @bike_model.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @bike_model.errors.full_messages}, status: :unprocessable_entity }
       end
     end
   end

@@ -1,23 +1,40 @@
 Rails.application.routes.draw do
+
+  resources :kucings
   resources :stock_histories
   
-  get 'inventory/index'
+  get 'inventory/index', as: 'inventory'
 
   get 'inventory/add'
 
   get 'inventory/check'
 
   get 'inventory/revise'
+  post 'inventory/product_history'
+
+  get 'kucings/tikus'
 
   get 'home/index'
   get 'home/login'
+  get 'home/logout'
   get 'home/signup'
+  get 'home/userlist'
+
+  get 'home/change_password'
+  post 'home/verify_change_password' => 'home#verify_change_password'
+  post 'home/authentication'
   post 'home/authentication' => 'home#authentication'
   post 'home/create' => 'home#create'
   post 'home/logout' => 'home#logout'
 
+  delete 'home/delete/:id' => 'home#delete'
+
   get 'customers/index'
+
   get 'orders/index'
+  get 'orders/payment'
+  get 'orders/deliver'
+
   get 'order_items/index'
   get 'bike_models/index'
   get 'products/index'
@@ -40,7 +57,7 @@ Rails.application.routes.draw do
 
   root 'home#index', as: 'home'
   post 'products/:id/cek' => 'products#cek'
-  get 'inventory/:id/check' => 'inventory#check'
+  get 'inventory/check/:id' => 'inventory#check'
 
 
 

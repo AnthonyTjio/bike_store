@@ -17,14 +17,25 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :bike_name %><br>
+    <% #f.label :bike_name, class: 'test' %>
+    <%= f.label :bike_name%><br>
     <%= f.text_field :bike_name %>
   </div>
   <div class="field">
     <%= f.label :bike_model_id %><br>
     <!-- <%= f.text_field :bike_model_id %> -->         
 
-    <%= f.select :bike_model_id, BikeModel.all.collect {|b| [b.bike_model_name, b.id ]}, {include_blank: true}%>
+   <!--%= f.select :bike_model_id, BikeModel.all.collect {|b| [b.bike_model_name, b.id ]}, {include_blank: true}%> -->
+
+    <select name="product[bike_model_id]" id="product_bike_model_id">
+      <option value="">Select Model</option>
+      
+      <%= BikeModel.all.each do |model| %>
+        <option value="<%= model.id%>" <%= @product.bike_model_id == model.id ? "selected" : ""%>><%= model.bike_model_name%></option>
+      <% end %>
+
+    </select>
+
   </div>
   <div class="field">
     <%= f.label :price %><br>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160503170639) do
+ActiveRecord::Schema.define(version: 20160610171637) do
 
   create_table "bike_models", force: :cascade do |t|
     t.string   "bike_model_name"
@@ -22,10 +22,14 @@ ActiveRecord::Schema.define(version: 20160503170639) do
   create_table "customers", force: :cascade do |t|
     t.string   "customer_name"
     t.text     "customer_address"
-    t.text     "shipping_address"
     t.string   "customer_phone"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+  end
+
+  create_table "kucings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -34,6 +38,7 @@ ActiveRecord::Schema.define(version: 20160503170639) do
     t.integer  "qty"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "price"
   end
 
   add_index "order_items", ["order_id"], name: "index_order_items_on_order_id"
@@ -42,10 +47,16 @@ ActiveRecord::Schema.define(version: 20160503170639) do
   create_table "orders", force: :cascade do |t|
     t.integer  "customer_id"
     t.date     "order_date"
-    t.time     "order_time"
-    t.string   "status"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "status"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.text     "shipping_address"
+    t.integer  "shipping_method"
+    t.string   "receipt_number"
+    t.date     "shipping_date"
+    t.date     "payment_date"
+    t.boolean  "is_paid"
+    t.boolean  "is_delivered"
   end
 
   add_index "orders", ["customer_id"], name: "index_orders_on_customer_id"
@@ -71,16 +82,6 @@ ActiveRecord::Schema.define(version: 20160503170639) do
 
   add_index "stock_histories", ["stock_id"], name: "index_stock_histories_on_stock_id"
 
-  create_table "stock_reports", force: :cascade do |t|
-    t.integer  "stock_id"
-    t.integer  "changes"
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "stock_reports", ["stock_id"], name: "index_stock_reports_on_stock_id"
-
   create_table "stocks", force: :cascade do |t|
     t.integer  "product_id"
     t.integer  "qty"
@@ -94,7 +95,7 @@ ActiveRecord::Schema.define(version: 20160503170639) do
     t.string   "username"
     t.string   "password_hash"
     t.string   "password_salt"
-    t.string   "type"
+    t.string   "user_type"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end

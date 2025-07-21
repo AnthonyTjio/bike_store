@@ -1,0 +1,83 @@
+<%= javascript_include_tag "angular/controller/userController" %>
+
+ <div ng-controller="userController">
+  <h2> Add New User </h2>
+  <input type="button" data-toggle="collapse" value="New User" data-target="#addNewUser"></br></br>
+  <form id="addNewUser" class="collapse">
+     User Name: <input type="text" id="userUsername"/>
+     <span id="create_user_username_header" style="color: red;" hidden>Username </span>
+     <span id="create_user_username_alert" style="color: red;"></span>
+
+     </br></br>
+     
+     Password: <input type="password" id="userPassword"/>
+     <span id="create_user_password_header" style="color: red;" hidden>Password </span>
+     <span id="create_user_password_alert" style="color: red;"></span>
+
+     </br></br>
+     Confirm Password: <input type="password" id="userConfirmPassword">
+     <span id="create_user_password_confirmation_header" style="color: red;" hidden>Password Confirmation </span>
+     <span id="create_user_password_confirmation_alert" style="color: red;"></span>
+
+     </br></br>
+     User Type: 
+       <select id="userType">
+         <option value="User">User</option>
+         <option value="Admin">Admin</option>
+       </select>
+      <span id="create_user_user_type_header" style="color: red;" hidden>User type </span>
+      <span id="create_user_user_type_alert" style="color: red;"></span>
+
+     </br></br>
+
+     <input type="submit" name="Submit" id="submitNewUser"></br></br>
+  </form>
+  <!-- table per
+  <!-- table pertama -->  
+  <div id="table-responsive-custom">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>User Type</th>
+          <th colspan="1">Actions</th>
+        </tr>
+      </thead>
+      <tbody >
+        <form>
+          <tr ng-repeat="u in users">
+          <td class="UserID">{{u.id}}</td>
+          <td class="UserUsername">{{u.username}}</td>
+          <td class="UserType"> {{u.user_type}}</td>
+          <td><input type="button" value="Delete" class="btn btn-primary btn-sm" class="destroyUser" data-toggle="modal" data-target="#deleteConfirm" onclick="delId = $(this).parent().parent().find('.UserID').html()"></td> 
+        </tr>
+      </form>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4" class="text-center">Data retrieved from database bike_store table bike_list</td>
+      </tr>
+    </tfoot>
+  </table>
+</div><!--end of .table-responsive-->
+</div>
+
+<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Delete Data</h4>
+        </div>
+        <div class="modal-body">
+          Are you Sure Want to Delete This User?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="deleteUser()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>

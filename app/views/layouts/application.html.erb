@@ -1,40 +1,117 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html >
+<head >
   <title>BikeStore</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'jquery', 'application', 'data-turbolinks-track' => true %>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <%= csrf_meta_tags %>
 </head>
-<body>
-	<!--
-		Fully Done -> No more
-		Done -> Need To be Edited
-	-->
-	<ul>
-		<li><%= link_to "Home", home_index_path %></li>
-		<li><%= link_to "Login", home_login_path %></li> <!-- Done -->
-		<li><%= link_to "Sign Up", home_signup_path %></li>
-		<li><%= link_to "Customer", customers_path %></li> <!-- Done -->
-		
-		<li><%= link_to "Order", orders_path %></li>  <!-- Done - Need Javascript for dynamic autofill -->
-		<li><%= link_to "Order Item", order_items_path %></li> <!-- Done -->
-		
-		<div><b>Product</b></div> <!-- Checking still missing -->
-		<li><%= link_to "Product List", inventory_index_path %></li> <!-- Done -->
-		<li><%= link_to "Add Stock", inventory_add_path %></li> <!-- Done-->
-		<li><%= link_to "Revise Stock", inventory_revise_path %></li> <!-- Done -->
+<body ng-app="myApp">
+    <div class="container">
+        <div class="row row-offcanvas row-offcanvas-left">    
+            <!-- sidebar -->
+            <div class="col-md-2 colsidebar-offcanvas" id="sidebar" role="navigation">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <%= link_to home_index_path do%>
+                                    <span class="glyphicon glyphicon-home">
+                                    </span>Home
+                                <% end %>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <%= link_to customers_path do%>
+                                    <span class="glyphicon glyphicon-star">
+                                    </span>Customer
+                                <% end %>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <%= link_to orders_path do %>
+                                    <span class="glyphicon glyphicon-edit">
+                                    </span>Order
+                                <% end %>
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="cursor: pointer;">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo"><span class="glyphicon glyphicon-th">
+                                </span>Inventory</a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>
 
-		<div><b>Product</b></div>
-		<li><%= link_to "Model List", bike_models_path %></li> <!-- Done -->
-		<li><%= link_to "Add Model", new_bike_model_path %></li>
+                                            <%= link_to inventory_path do%>
+                                            Product
+                                            <% end %>
 
-		
-	</ul>
+                                        </td>
+                                    </tr>
+                                    <tr>    
+                                        <td>
+                                            <%= link_to "Model", bike_models_path %>                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <%= link_to home_userlist_path do %>
+                                    <span class="glyphicon glyphicon-user">
+                                    </span>User
+                                <% end %> 
+                            </h4>
+                        </div>                        
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
 
+                                <%= link_to "Login", home_login_path %><br />
+                                <%= link_to "Logout", home_logout_path %><br />
+                                <%= link_to "Change Password", home_change_password_path %><br/> 
+                                <a href="#/inventoryHistory"><span class="glyphicon glyphicon-shopping-cart">
+                                </span>History</a>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>      
+            <!-- end side bar -->
 
-<%= yield %>
-
-	<p id="notice"><%= notice %></p>
+            <!-- main area -->
+            <h1 id="welcome"> WELCOME <span id="username"><%= @current_user? @current_user.username : "Guest" %></span></H1>
+            
+            <%= notice %>
+            <div id="mainArea" class="col-md-10">
+                
+                    <div ng-view>                    	
+						<%= yield %>
+                    </div>
+                            
+            </div><!-- col-md-10 main -->
+        </div><!--/.row row-offcanvas row-offcanvas-left-->
+    </div><!--/.container-->
+	
 </body>
 </html>

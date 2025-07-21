@@ -1,22 +1,214 @@
-<h1>Inventory#check</h1>
-<p>Find me in app/views/inventory/check.html.erb</p>
+<%= javascript_include_tag "angular/controller/stockController" %>
 
-Product ID: <%= @product.id %> <br />
-Product Name: <%= @product.bike_name %> <br />
-Product Price: <%= @product.price %> <br />
-Product Size: <%= @product.bike_size %> <br />
-Product Qty: <%= @stock.qty %> <br />
-<br />
-History: <br />
+<script type="text/javascript">
+      $(function() {
+  $("#productHistoryStartingDate" ).datepicker();
+  $("#productHistoryEndingDate" ).datepicker();
+});
+</script>
 
-	<% @stock_histories.each do |stock_history| %>
-      <ul>
-      	<li> Created on: <%= stock_history.created_at %> </li>
-      	<li> Description: <%= stock_history.description %> </li>
-      	<li> Status: <%= stock_history.alteration>0 ? "In" : "Out" %>
-      	<li> Qty: <%= stock_history.alteration %> </li>
+<div ng-controller="stockController">
 
-      </ul>
-      <br />
-    <% end %>
+  <!-- Update -->
 
+	<div id="reviseProductData">
+	    <h2> Product Data </h2>
+	    <form role="form" class="form-horizontal">
+	      <div class="form-group">
+	        <label class="control-label-left col-sm-2" for="text">Bike ID:</label>
+	        <div class="col-sm-6">
+	          <input type="text" class="form-control" id="reviseProductID" placeholder="Enter Product ID" value="<%= @product.id %> "disabled>
+	        </div>
+	      </div>
+	      
+	      <div class="form-group">
+	        <label class="control-label-left col-sm-2" for="text">Bike Name:</label>
+	        <div class="col-sm-6">          
+	          <input type="text" class="form-control" id="reviseProductName" placeholder="Enter Product Name" value="<%= @product.bike_name %>" disabled>
+	        </div>
+	      </div>
+
+	      <div class="form-group">
+	        <label class="control-label-left col-sm-2" for="text">Qty:</label>
+	        <div class="col-sm-6">          
+	          <input type="text" class="form-control" id="reviseProductQty" placeholder="Enter Product Qty" value="<%= @stock.qty %>" disabled>
+	        </div>
+	      </div>
+	      
+	      <div class="form-group">
+	        <label class="control-label-left col-sm-2" for="text">Bike Model:</label>
+	        <div class="col-sm-6">                    
+	          <select class="form-control" id="reviseProductModel">
+	            <option value="">Select Model</option>
+      
+			      <%= BikeModel.all.each do |model| %>
+			        <option value="<%= model.id%>" <%= @product.bike_model_id == model.id ? "selected" : ""%>><%= model.bike_model_name%></option>
+			      <% end %>
+
+	          </select>
+	          <span id="revise_product_bike_model_id_header" style="color: red;" hidden>Bike Price</span>
+	          <span id="revise_product_bike_model_id_alert" style="color: red;"></span>
+	        </div>
+	      </div>
+
+	      <div class="form-group">
+	        <label class="control-label-left col-sm-2" for="text">Bike Size:</label>
+	        <div class="col-sm-6">          
+	          <select class="form-control" id="reviseProductSize">
+	            <option value="">Select Size</option>
+	            
+	            <%= @size.each do |s| %>
+	              <option value="<%= s%>" <%= @product.bike_size == s ? "selected" : ""%> ><%= s%></option>
+	            <% end %>
+	          </select>
+
+	          <span id="revise_product_bike_size_header" style="color: red;" hidden>Bike Size</span>
+	          <span id="revise_product_bike_size_alert" style="color: red;"></span>
+	        </div>
+	      </div>
+
+	      <div class="form-group">
+	        <label class="control-label-left col-sm-2" for="text">Bike Price:</label>
+	        <div class="col-sm-6">          
+	          <input type="text" class="form-control" id="reviseProductPrice" placeholder="Enter Customer Address" value="<%= @product.price %> ">
+	          <span id="revise_product_price_header" style="color: red;" hidden>Bike Price</span>
+	          <span id="revise_product_price_alert" style="color: red;"></span>
+	        </div>
+	      </div>
+
+	      <div class="form-group">        
+	        <div class="col-sm-offset-2 col-sm-6">
+	          <button type="button" id="buttonReviseProduct" class="btn btn-default" onclick="editProduct()">Submit</button>
+	        </div>
+	      </div>
+	    </form>
+  </div>
+
+  <!-- Add Qty -->
+
+   <input type="button" data-toggle="collapse" value="Add Qty" data-target="#addQtyData"></br></br>
+
+   <div id="addQtyData" class="collapse">
+    <h2> Add Qty </h2>
+    <form role="form" class="form-horizontal">
+      <input type="hidden" class="form-control" id="addQtyProductID" placeholder="Enter Product ID" value="<%= @product.id%>" disabled>
+      
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Current Qty</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="addQtyCurrentStock" placeholder="Enter Current Qty" value="<%= @stock.qty%>" disabled>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">New Stocks</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="addQtyAdditionalStock" placeholder="Enter Additional Stock">
+        </div>
+        <span id="add_qty_alteration_header" style="color: red;" hidden>New Stocks </span>
+        <span id="add_qty_alteration_alert" style="color: red;"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Total Qty</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="addQtyTotalStock" placeholder="Enter Total Qty" disabled>
+        </div>
+        <span id="add_qty_qty_header" style="color: red;" hidden>Total Stock </span>
+        <span id="add_qty_qty_alert" style="color: red;"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Description</label>
+        <div class="col-sm-6">          
+          <textarea class="form-control" id="addQtyDescription" placeholder="Where the stock come from?"></textarea>
+        </div>
+        <span id="add_qty_description_header" style="color: red;" hidden>Description </span>
+        <span id="add_qty_description_alert" style="color: red;"></span>
+      </div>
+
+      <div class="form-group">        
+        <div class="col-sm-offset-2 col-sm-6">
+          <button type="button" id="buttonAddQty" class="btn btn-default" onclick="addQty()">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Revise Qty -->
+
+   <input type="button" data-toggle="collapse" value="Revise Qty" data-target="#reviseQtyData"></br></br>
+
+   <div id="reviseQtyData" class="collapse">
+    <h2> Revise Qty </h2>
+    <form role="form" class="form-horizontal">
+      <input type="hidden" class="form-control" id="reviseQtyProductID" placeholder="Enter Product ID" value="<%= @product.id%>" disabled>
+      
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Current Qty</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="reviseQtyCurrentStock" placeholder="Enter Current Qty" value="<%= @stock.qty%>" disabled>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">New Stocks</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="reviseQtyAdditionalStock" placeholder="Enter Additional Stock">
+        </div>
+        <span id="revise_qty_alteration_header" style="color: red;" hidden>New Stocks </span>
+        <span id="revise_qty_alteration_alert" style="color: red;"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Total Qty</label>
+        <div class="col-sm-6">          
+          <input type="text" class="form-control" id="reviseQtyTotalStock" placeholder="Enter Total Qty" disabled>
+        </div>
+        <span id="revise_qty_qty_header" style="color: red;" hidden>Total Stock </span>
+        <span id="revise_qty_qty_alert" style="color: red;"></span>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label-left col-sm-2" for="text">Description</label>
+        <div class="col-sm-6">          
+          <textarea class="form-control" id="reviseQtyDescription" placeholder="Where happened?"></textarea>
+        </div>
+        <span id="revise_qty_description_header" style="color: red;" hidden>Description </span>
+        <span id="revise_qty_description_alert" style="color: red;"></span>
+      </div>
+
+      <div class="form-group">        
+        <div class="col-sm-offset-2 col-sm-6">
+          <button type="button" id="buttonAddQty" class="btn btn-default" onclick="reviseQty()">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <h2>Check product history: </h2>
+  <form>
+  	<div class="form-group">   
+  		Timestamp:      
+	        <input type="text" id="productHistoryStartingDate" placeholder="Enter Starting Date">
+	        to
+	        <input type="text" id="productHistoryEndingDate" placeholder="Enter Ending Date">
+
+	        <button type="button" id="buttonGetProductHistory" onclick="getProductHistory()">Search</button>
+
+	        <button type="button" id="buttonGeneratePDF" onclick="productHistoryPDF()">Generate PDF</button>
+	    
+	      </div>
+	</div>
+  </form>
+
+	<div id="product_history_track">
+
+	</div>
+
+  </div>
+
+ 
+
+  

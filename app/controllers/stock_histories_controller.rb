@@ -26,32 +26,36 @@ class StockHistoriesController < ApplicationController
    def create
      @stock_history = StockHistory.new(stock_history_params)
      
-     
-
      @stock = Stock.find_by(product_id: stock_history_params[:product])
      status = stock_history_params[:type]
      qty = stock_history_params[:alteration]
+     
      if(status=='false') 
       qty = qty.to_i*-1
       end 
-
-     puts "=========================================================="
-     puts "stock: #{@stock.qty}"
-     puts "==========================================================" 
-     @stock.qty+= qty.to_i
-     @stock_history.alteration = qty.to_i
-     @stock_history.stock_id = @stock.id
+     
+     if(qty!=nil)
+       @stock.qty+= qty.to_i
+       @stock_history.alteration = qty.to_i
+       @stock_history.stock_id = @stock.id
+     end
+     
      
 
      respond_to do |format|
-       if @stock_history.save
-          @stock.save
-         format.html { redirect_to inventory_index_path, notice: 'Stock history was successfully created.' }
-         format.json { render :show, status: :created, location: @stock_history }
-       else
+       if @stock.save
+         if @stock_history.save
+           format.html { redirect_to inventory_index_path, notice: 'Stock history was successfully created.' }
+           format.json { render :show, status: :created, location: @stock_history }
+         else
+           format.html { render :new }
+           format.json { render json: {errors: @stock_history.errors }, status: :unprocessable_entity }
+         end
+
+      else
          format.html { render :new }
-         format.json { render json: @stock_history.errors, status: :unprocessable_entity }
-       end
+         format.json { render json: {errors: @stock.errors }, status: :unprocessable_entity }
+      end    
      end
    end
 

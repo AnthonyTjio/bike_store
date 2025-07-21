@@ -1,6 +1,6 @@
 class OrderItemsController < ApplicationController
-  before_action :set_order_item, only: [:show, :edit, :update, :destroy]
-  before_action :load_products, only: [:new, :edit]
+  before_action :set_order_item, only: [:edit, :update, :destroy]
+  before_action :load_products, only: [:new, :update, :edit]
 
   # GET /order_items
   # GET /order_items.json
@@ -11,15 +11,15 @@ class OrderItemsController < ApplicationController
   # GET /order_items/1
   # GET /order_items/1.json
   def show
+    @order_item = OrderItem.find(order_id: params[:id])
   end
 
   # GET /order_items/new
   def new
-    @order = Order.find_by(id: params[:orderID])
-
+    @order = Order.find_by(id: params[:order_id])
+    @product = Product.find_by_id(params[:product_id])
     puts params[:orderID]
     @order_item = OrderItem.new
-    @order_item.order_id = @order.id
   end
 
   # GET /order_items/1/edit
@@ -30,16 +30,46 @@ class OrderItemsController < ApplicationController
   # POST /order_items
   # POST /order_items.json
   def create
-    @order_item = OrderItem.new(order_item_params)
+    order = Order.find_by_id(order_item_params[:order_id])
+    product =  Product.find_by_id(order_item_params[:product_id])
+    qty = order_item_params[:qty].to_i
+
+    if(!OrderItem.exists?(:order_id => order.id, :product_id => product.id))
+    @order_item = OrderItem.new()
+
+    price = product.price
+
+    # masukin dalam datanya
+    @order_item.order_id = order.id
+    @order_item.product_id = product.id
+    @order_item.qty = qty
+    @order_item.price = price
+
       respond_to do |format|
         if @order_item.save
-          format.html { redirect_to @order_item, notice: 'Order item was successfully created.' }
-          format.json { render :show, status: :created, location: @order_item }
+          format.json { render :show, status: :created}
         else
-          format.html { render :new }
-          format.json { render json: @order_item.errors, status: :unprocessable_entity }
+          format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity }
         end
       end
+
+    else # if the product existed in the cart
+
+      @order_item = OrderItem.find_by(:order_id => order.id, :product_id => product.id)
+      price = @order_item.product.price
+
+      @order_item.qty = qty
+      @order_item.price = price
+
+      respond_to do |format|
+        if @order_item.save
+          format.json { render :show, status: :created}
+        else
+          format.json { render json: {errors: @order_item.errors} , status: :unprocessable_entity}
+        end
+      end
+    end
+
   end
 
   # PATCH/PUT /order_items/1
@@ -70,6 +100,7 @@ class OrderItemsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_order_item
       @order_item = OrderItem.find(params[:id])
+      
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -27,12 +27,11 @@ class CustomersController < ApplicationController
     @customer = Customer.new(customer_params)
 
     respond_to do |format|
-      if @customer.save
-        format.html { redirect_to @customer, notice: 'Customer was successfully created.' }
-        format.json { render :show, status: :created, location: @customer }
+      if @customer.save      
+        format.json { render json: {message: "New Customer Created!", customer: @customer }, status: :created}
       else
-        format.html { render :new }
-        format.json { render json: @customer.errors, status: :unprocessable_entity }
+
+        format.json { render json: {errors: @customer.errors}, status: :unprocessable_entity }
       end
     end
   end
@@ -41,12 +40,10 @@ class CustomersController < ApplicationController
   # PATCH/PUT /customers/1.json
   def update
     respond_to do |format|
-      if @customer.update(customer_params)
-        format.html { redirect_to @customer, notice: 'Customer was successfully updated.' }
-        format.json { render :show, status: :ok, location: @customer }
-      else
-        format.html { render :edit }
-        format.json { render json: @customer.errors, status: :unprocessable_entity }
+      if @customer.update(customer_params)        
+        format.json { render json: {message: "Customer data successfully updated!"}, status: :accepted }
+      else        
+        format.json { render json: {errors: @customer.errors}, status: :unprocessable_entity }
       end
     end
   end
@@ -57,7 +54,7 @@ class CustomersController < ApplicationController
     @customer.destroy
     respond_to do |format|
       format.html { redirect_to customers_url, notice: 'Customer was successfully destroyed.' }
-      format.json { head :no_content }
+      format.json { head :no_content, message: 'Customer data successfully deleted', success: true }
     end
   end
 
@@ -69,6 +66,6 @@ class CustomersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
-      params.require(:customer).permit(:customer_name, :customer_address, :shipping_address, :customer_phone)
+      params.require(:customer).permit(:customer_name, :customer_address, :customer_phone)
     end
 end

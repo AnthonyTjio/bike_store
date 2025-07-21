@@ -1,2 +1,84 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<%= javascript_include_tag "angular/controller/orderController" %>
+<%= javascript_include_tag "angular/controller/stockController" %>
+
+<h2> Sales (Tar ada diagram expenditure & income) </h2>
+
+ <div ng-controller="orderController">
+  <h2> New Orders </h2>
+  <!-- table pertama -->  
+  <div id="table-responsive-custom">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Shipping Adress</th>
+          <th>Shipping Method</th>
+          <th>Order date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody >
+        <form>
+          <tr ng-repeat="o in orders">
+            <td id="CustomerID" > {{o.customer.customer_name}} </td>
+            <td id="ShippingAddress" > {{o.shipping_address}} </td>
+            <td id="ShippingMethod" > {{o.shipping_method}} </td>
+            <td id="OrderDate" > {{o.order_time}} </td>
+            <td id="Status" > {{o.status}} </td>
+          <!-- <td> <button ng-click="edit(p.productBikeID);">Edit</button> </td>
+          <td > <input type="button" value="Save" class="saveBike" > </td>
+          <td> <input type="button" value="Delete" class="deleteBike"> </td> -->
+        </tr>
+      </form>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5" class="text-center">Data retrieved from database bike_store table bike_list</td>
+      </tr>
+    </tfoot>
+  </table>
+</div><!--end of .table-responsive-->
+</div>
+
+ <div ng-controller="stockController">
+  <h2> Stocks </h2>
+  <!-- table pertama -->  
+  <div id="table-responsive-custom">
+    <table summary="This table shows file inside database" class="table table-bordered table-hover">
+      <caption class="text-center">{{title}}</caption>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Bike name</th>
+          <th>Bike model</th>
+          <th>Stock</th>
+          <th>Price</th>
+          <th>Bike size</th>
+        </tr>
+      </thead>
+      <tbody >
+        <form>
+          <tr ng-repeat="s in stocks">
+            <td id="CustomerID" > {{s.id}} </td>
+            <td id="ShippingAddress" > {{s.product.bike_name}} </td>
+            <td id="OrderDate" > {{s.product.bike_model.bike_model_name}} </td>
+            <td id="Status" > {{s.qty}} </td>
+            <td id="OrderDate" > {{s.product.price}} </td>
+            <td id="Status" > {{s.product.bike_size}} </td>
+          <!-- <td> <button ng-click="edit(p.productBikeID);">Edit</button> </td>
+          <td > <input type="button" value="Save" class="saveBike" > </td>
+          <td> <input type="button" value="Delete" class="deleteBike"> </td> -->
+        </tr>
+      </form>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5" class="text-center">Data retrieved from database bike_store table bike_list</td>
+      </tr>
+    </tfoot>
+  </table>
+</div><!--end of .table-responsive-->
+</div>
+
+

@@ -1,8 +1,17 @@
 class HomeController < ApplicationController
 
-  before_action :set_user, only: [:update]
+  before_action :set_user, only: [:update, :delete]
 
   def index
+    @orders = Order.all
+  end
+
+  def userlist
+    @users = User.all
+    respond_to do |format|
+      format.html
+      format.json { render json: @users }
+    end
   end
 
   def signup
@@ -20,15 +29,60 @@ class HomeController < ApplicationController
   		redirect_to home_login_path
   end
 
+  def change_password    
+    @user=  User.find(session[:user_id])
+    
+  end
+
+  def verify_change_password
+    @user = User.authenticate(user_params[:username], user_params[:old_password])
+
+    @password = user_params[:password]
+    @password_confirmation = user_params[:password_confirmation]
+
+    if(@user)
+
+      if(@password == @password_confirmation)
+        
+        if (@user.update(user_params))
+          respond_to do |format|    
+            format.json { render json: {message: "password successfully updated!"}, status: :accepted  }
+          end
+        else
+          respond_to do |format|    
+            format.json { render json: {errors: @user.errors}, status: :unprocessable_entity  }
+          end
+        end
+
+      else
+        
+        respond_to do |format|    
+            format.json { render json: {errors: {password_confirmation: "password confirmation required!"}}, status: :unprocessable_entity  }
+        end
+      end
+      
+    else
+      respond_to do |format|
+        format.json { render json: {errors: {old_password: "doesn't match!"}}, status: :unprocessable_entity }      
+      end
+    end
+    
+  end
+
   def authentication
   	# routes & view required
   	
-  	@user = User.authenticate(params[:username], params[:password])
-
+  	@user = User.authenticate(user_params[:username], user_params[:password])
+    
   	if(@user) # if user found
   		session[:user_id] = @user.id
-  		redirect_to home_index_path
-  	else # if user not found
+      respond_to do |format|
+        format.html { redirect_to home_index_path }
+    		format.json { render json: @user }
+        flash.now[:notice] = @user.username || "Test"
+
+      end
+   	else # if user not found
   		redirect_to request.referer, :notice => "User not found!"
   	end
   end
@@ -36,11 +90,32 @@ class HomeController < ApplicationController
   def create
   	@user = User.new(user_params)
   	if(@user.save)
-  		redirect_to request.referer, :notice => "New user created!"
+      respond_to do |format|
+        format.json { render json: {message: 'User successfully created!'}, status: :created }
+      end
   	else
-  		redirect_to request.referer, :notice => "Cannot create new user"
+      respond_to do |format|
+        format.json { render json: {errors: @user.errors }, status: :unprocessable_entity }
+      end  		
   	end
   end
+
+  ######################### update ######################### 
+  def delete
+    @user = User.find(params[:id])
+    if(@user.user_type=="Admin")
+      respond_to do |format|        
+        format.json { render json: {message: 'Admin cannot be deleted'}, status: :forbidden }
+      end
+    else 
+      @user.destroy
+      respond_to do |format|      
+        format.json { render json: {message: 'User was successfully deleted'}, status: :accepted }
+      end
+    end
+    
+  end
+  ######################### update ######################### 
 
   def test
   	
@@ -52,7 +127,7 @@ class HomeController < ApplicationController
   	end
 
   	def user_params
-  		params.require(:user).permit(:username, :password, :confirm_password, :type)
+  		params.require(:user).permit(:username, :old_password, :password, :password_confirmation, :user_type)
   	end
 
 end

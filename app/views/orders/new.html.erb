@@ -1,54 +1,300 @@
-<h1>New Order</h1>
+<script type="text/javascript">
+              $(function() {
+			    $("#productHistoryStartingDate" ).datepicker();
+			    $("#productHistoryEndingDate" ).datepicker();
+			  });
+</script>
+<%= javascript_include_tag "angular/controller/orderController" %>
 
-<%= form_for(@order) do |f| %>
-  <% if @order.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+<input type="hidden" disabled id="orderItemOrderID"  value="0" />
 
-      <ul>
-      <% @order.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+<div id="NewOrderItem" ng-controller="NewOrderItemController" onload="getProductData()" >
+    
+    <!-------------------------CUSTOMER-------------------------------> 
+    <div class="row customer-section">
+        <div class="col-md-2">
+            
+        </div>
+        <div class="col-md-8 tabs">
+           <button class="btn btn-danger back"><%= link_to 'Back', orders_path %></button>
+            <div class="tabsView">
+                <!--<div ng-include="currentTab"></div>-->
+                <form class="form-horizontal" role="form" id="addNewCustomer">
+                    
+                    <div class="row">
+                        <div class="col-md-2" >
+                            <h2> Customer </h2>
+                        </div>
+                        <div class="col-md-10">
+                            
+                        </div>
+                    </div>
+                        
+                     <div class="row">
+                         <div class="col-md-2" >
+                             Customer ID: 
+                        </div> 
+                            <div class="col-md-4 customer-biodata">
+                             <select id="orderCustomerID" class="form-control" onchange="findCustomerData()">
+                              <option value="">New Customer</option>
+                    
+                              <%= Customer.all.each do |customer| %>
+                                <option value="<%= customer.id%>"><%= customer.id%> - <%= customer.customer_name%></option>
+                              <% end %>
+                             </select>
+                         </div>
+                    </div>
+                	   
+                     <div class="row">
+                         <div class="col-md-2" >
+                             Customer Name: 
+                        </div>
+                         <div class="col-md-4 customer-biodata" >
+                             <input type="text" class="form-control" id="orderCustomerName"/>
+                         </div>
+                         <div class="col-md-6 customer-biodata" >
+                             <span id="order_customer_name_header" style="color: red;" hidden>Customer Name </span>
+                             <span id="order_customer_name_alert" style="color: red;"></span>
+                         </div>
+                     </div>
+                     
+                     <div class=" row">
+                         <div class="col-md-2" >
+                             Customer Address:
+                         </div>
+                         
+                         <div class="col-md-4 customer-biodata" >
+                             <input type="text" class="form-control" id="orderCustomerAddress"/>
+                         </div>  
+                             
+                         <div class="col-md-6 customer-biodata" >
+                             <span id="order_customer_address_header" style="color: red;" hidden>Customer Name </span>
+                             <span id="order_customer_address_alert" style="color: red;"></span>
+                         </div>
+                         
+                     </div>
+                    
+                    <div class="row">
+                        
+                           <div class="col-md-2" > 
+                             Customer Phone: 
+                         </div>
+                            <div class="col-md-4 customer-biodata" >
+                                 <input type="text" class="form-control" id="orderCustomerPhone"/>
+                         </div>
+                         
+                             <div class="col-md-6 customer-biodata" >
+                                 <span id="order_customer_phone_header" style="color: red;" hidden>Customer Phone </span>
+                                 <span id="order_customer_phone_alert" style="color: red;"></span>
+                         </div>
+                    </div>
+                     
+                    <div class="row">
+                        <div class="col-md-2" >
+                         
+                        </div>
+                        <div class="col-md-4" >
+                            <input type="button" id="submitCustomerOrder" value="Next" class="btn btn-success" onclick="orderSetCustomerData()">
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
     </div>
-  <% end %>
+    
+    <!-----------------------END OF CUSTOMER-------------------------------> 
+        
+    <!-------------------------ITEM------------------------------->      
+    <div class="row item-section">
+        <div class="col-md-2">
+                
+        </div>
+        <div class="col-md-8 tabs">
+            <div class="tabsView">
+                <form role="form" id="addOrderItems">
+                    <div class="row">
+                        <div class="col-md-2" >
+                            <button id="up-to-customer" class="btn btn-info" onclick="upToCustomerSection()">
+                                <i class="fa fa-caret-square-o-up" aria-hidden="true"></i> UP
+                            </button>
+                            <h2> Items </h2>
+                        </div>
+                        <div class="col-md-4">
+                            
+                        </div>
+                    </div>    
+                    
+                    <div class="row">
+                        <div class="col-md-2" >
+                            Bike Name: 
+                        </div>
+                        <div class="col-md-4 item-to-add">
+                            <select id="orderItemProductID" class="form-control" onchange="getProductData()">
+                              <%= Product.all.order(:bike_name).each do |product| %>
+                                <option value="<%= product.id%>"><%= product.bike_name%></option>
+                              <% end %>
+                            </select>
+                        </div>
+                    </div>   
+    
+                    <div class="row">
+                        <div class="col-md-2" >
+                            Price: 
+                        </div>
+                        <div class="col-md-4 item-to-add">
+                            <input type="number" class="form-control" id="orderItemPrice" disabled/>
+                        </div>
+                        <div class="col-md-6 item-to-add">
+                           
+                        </div>
+                    </div>   
+    
+                     <div class="row">
+                        <div class="col-md-2" >
+                            Qty: 
+                        </div>
+                        <div class="col-md-4 item-to-add">
+                            <input type="number" class="form-control" id="orderItemQty" minimum="1"/>
+                        </div>
+                        <div class="col-md-6 item-to-add">
+                            <span id="order_item_qty_header" style="color: red;" hidden>Qty </span>
+                            <span id="order_item_qty_alert" style="color: red;"></span>
+                        </div>
+                    </div>   
+    
+                     <div class="row">
+                        <div class="col-md-2" >
+                            Total Price: 
+                        </div>
+                        <div class="col-md-4 item-to-add">
+                            <input type="number" class="form-control" id="orderItemTotalPrice" disabled/>
+                        </div>
+                        <div class="col-md-6 item-to-add">
+                           
+                        </div>
+                    </div>   
+                    
+                    <div class="row">
+                        <div class="col-md-2" >
+                            
+                        </div>
+                        <div class="col-md-4 item-to-add">
+                          <input type="button" name="Add To Cart" id="orderItemAddToCart" class="btn btn-success" onclick="addToCart()">
+                        </div>
+                        <div class="col-md-6 item-to-add">
+                           
+                        </div>
+                    </div>   
+    
+                     <div class="row">
+                        <div class="col-md-12" >
+                            
+                          <div id="table-responsive-custom">
+                            <table summary="This table shows file inside database" class="table table-bordered table-hover">
+                              <caption class="text-center">{{title}}</caption>
+                              <thead>
+                                <tr>
+                                  <th>Product Name</th> 
+                                  <th>Price</th>
+                                  <th>Qty</th>
+                                  <th>Total Price</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody >
+                                <form>
+                                  <tr ng-repeat="i in order_items">
+                                    <td id="OrderItemID" style="display:none"> {{i.id}} </td>
+                                    <td id="ProductName" > {{i.bike_name}} </td>
+                                    <td id="Price" > {{i.price}} </td>
+                                    <td id="Qty" > {{i.qty}} </td>
+                                    <td id="Total Price" > {{i.price*i.qty}} </td>
+                                  <td> <input type="button" value="Delete" data-toggle="modal" data-target="#deleteConfirm" onclick="delId = $(this).parent().parent().find('.OrderItemID').html()"></td> 
+                                </tr>
+                              </form>
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                <td colspan="5" class="text-center">Data retrieved from database bike_store table bike_list</td>
+                              </tr>
+                            </tfoot>
+                          </table>
+                        </div><!--end of .table-responsive-->
+                            <input type="button" name="Save Order" id="saveOrderButton" value="Save" class="btn btn-success" onclick="saveOrder()">
+                            <input type="button" name="Confirm Order" id="confirmOrderButton" value="Next" class="btn btn-success" onclick="confirmOrder()">
+                            
+                        </div>
+                    </div> 
+              </form>
+            </div>
+        </div>
+        <div class="col-md-2">
+            
+        </div>
+    </div>
+     <!---------------------------END OF ITEM----------------------->
+     
+     <!-------------------------PAYMENT------------------------------->      
+    <div class="row payment-section">
+        <div class="col-md-2">
+                
+        </div>
+        <div class="col-md-8 tabs">
+            <div class="tabsView">
+                <form role="form" id="payment">
+                    
+                    <div class="row">
+                        <div class="col-md-8" >
+                            <button id="up-to-customer" class="btn btn-info" onclick="upToItemSection()">
+                                <i class="fa fa-caret-square-o-up" aria-hidden="true"></i> UP
+                            </button>
+                            <h2> Payment & Delivery </h2>
+                        </div>
+                        <div class="col-md-4">
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-2" >
+                            
+                        </div>
+                        <div class="col-md-4">
+                            
+                        </div>
+                        <div class="col-md-6 item-to-add">
+                           
+                        </div>
+                    </div> 
+                    
+                </form>
+            </div>
+        </div>
+        <div class="col-md-2">
+            
+        </div>
+    </div>
+     <!---------------------------END OF PAYMENT----------------------->
 
-  <%= fields_for @customer do |c| %>
-  <div class="field">
-    <%= c.label :id%><br />
-    <select id="customer_id" name="customer[id]">
-      <option value="">New Customer</option>
-        <%= Customer.all.each do |customer| %>
-          <option value="<%= customer.id%>"><%= customer.id %>. <%=customer.customer_name %></option>
-        <% end %>
-    </select>
+</div>
+ 
+
+<div class="modal fade" id="deleteConfirm" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Delete Data</h4>
+        </div>
+        <div class="modal-body">
+          Are you Sure Want to Delete This Order Item?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="deleteOrderItem()">Delete</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="field">
-    <%= c.label :customer_name%><br />
-    <%= c.text_field :customer_name%>
-  </div>
-  <div class="field">
-    <%= c.label :customer_address %><br>
-    <%= c.text_area :customer_address %>
-  </div>
-  <div class="field">
-    <%= c.label :shipping_address %><br>
-    <%= c.text_area :shipping_address %>
-  </div>
-  <div class="field">
-    <%= c.label :customer_phone %><br>
-    <%= c.text_field :customer_phone %>
-  </div>
-  <% end %>
   
-  <div class="field">
-    <%= f.label :status %><br>
-    <%= f.text_field :status %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
-
-
-<%= link_to 'Back', orders_path %>

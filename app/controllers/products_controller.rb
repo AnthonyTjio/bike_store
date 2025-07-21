@@ -39,45 +39,52 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
    @product = Product.new(product_params)
+   @qty = stock_params[:qty].to_i
 
-    respond_to do |format|
-      if @product.save
+   respond_to do |format|
 
-        @stock = Stock.new 
-        
-        @stock.product_id = @product.id
-        @stock.qty = stock_params[:qty].to_i
+      if(@product.save)
 
-        if @stock.save
-        else
-          puts @stock.errors.full_messages
-        end
-
+      @stock = Stock.new
+      @stock.product_id = @product.id
+      @stock.qty = @qty
+      
+      if(@stock.save)
         @stock_history = StockHistory.new
         @stock_history.stock_id = @stock.id
         @stock_history.alteration = @stock.qty
         @stock_history.description = "Initial Stock"
         @stock_history.save
-        
-          format.html { redirect_to @product, notice: 'Product was successfully created.' }
-          format.json { render :show, status: :created, location: @product }
-        else
-          format.html { render :new }
-          format.json { render json: @product.errors, status: :unprocessable_entity }
-        end
-    end
+
+      else
+        @product.delete
+        format.html { render :new }
+        format.json { render json: {errors: @stock.errors}, status: :unprocessable_entity }
+
+      end
+
+      format.html { redirect_to @product, notice: 'Product was successfully created.' }
+      format.json { render :show, status: :created, location: @product }
+     else
+
+      format.html { render :new }
+      format.json { render json: {errors: @product.errors}, status: :unprocessable_entity }
+     end
+
+
+    end 
   end
 
   # PATCH/PUT /products/1
   # PATCH/PUT /products/1.json
   def update
     respond_to do |format|
-      if @product.update(product_params)
+      if @product.update(update_product_params)
         format.html { redirect_to request.referer, notice: 'Product was successfully updated.' }
         format.json { render :show, status: :ok, location: @product }
       else
         format.html { render :edit }
-        format.json { render json: @product.errors, status: :unprocessable_entity }
+        format.json { render json: {errors: @product.errors}, status: :unprocessable_entity }
       end
     end
   end
@@ -96,18 +103,22 @@ class ProductsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_product
       @product = Product.find(params[:id])
-      @qty = 0
       @stock = Stock.new
+      @qty = 0
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
       # @bike_model_id = BikeModel.find_by(bike_model_name: :bike_model_id).id
 
-      params.require(:product).permit(:bike_name, :bike_model_id, :price, :bike_size, :confirmation)
+      params.require(:product).permit(:bike_name, :bike_model_id, :price, :bike_size)
     end
 
     def stock_params
       params.require(:stock).permit(:qty)
+    end
+
+    def update_product_params
+        params.require(:product).permit(:price)
     end
 end

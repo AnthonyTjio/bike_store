@@ -1,5 +1,10 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :constructor
+  
+  def constructor
+    
+  end
 
   # GET /orders
   # GET /orders.json
@@ -24,29 +29,37 @@ class OrdersController < ApplicationController
     @customer = Customer.find_by(id: @order.customer_id)
   end
 
+  def payment
+    
+  end
+
+  def deliver
+    
+  end
+
   # POST /orders
   # POST /orders.json
   def create
-    @order = Order.new(order_params)
-    @order.order_time = Time.new
-
-    if(customer_params[:id]==nil||customer_params[:id]=='') then 
-      @customer = Customer.new(customer_params)
-      @customer.save
-    else 
-      @customer = Customer.find(customer_params[:id])
-      @customer.update_attributes(customer_params)
+     ok = true
+     @customer = Customer.find_by_id(customer_params[:id])
+     if(@customer==nil)
+        respond_to do |format|
+          format.json { render json: {errors: "Customer not found"}, status: :unprocessable_entity }
+        end
     end
-
-    @order.customer_id = @customer.id
-    respond_to do |format|
-      if @order.save
-        format.html { redirect_to @order, notice: 'Order was successfully created.' }
-        # format.html { redirect_to request.referer, notice: 'Order was successfully created.' }
-        format.json { render :show, status: :created, location: @order }
-      else
-        format.html { render :new }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+    puts "TEST"
+    if(ok)
+      @order = Order.new()
+      @order.customer_id = @customer.id
+      
+      respond_to do |format|
+        if @order.save
+          puts "Success"
+          format.json { render :show, status: :created, location: @order }
+        else
+          puts "Failed"
+          format.json {render json: {errors: @order.errors}, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -54,23 +67,12 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
-    @order = Order.find_by(id: params[:id])
-    
-    @order.customer.shipping_address = update_customer_params[:shipping_address]
-    @order.customer.customer_phone = update_customer_params[:customer_phone]
-    @order.status = update_customer_params[:status]
-
-    respond_to do |format|
-      if @order.update_attributes(:status => update_customer_params[:status])
-        @order.customer.update_attributes(
-          :shipping_address => update_customer_params[:shipping_address], 
-          :customer_phone => update_customer_params[:customer_phone])
-
-        format.html { redirect_to @order, notice: 'Order was successfully updated.' }
-        format.json { render :show, status: :ok, location: @order }
-      else
-        format.html { render :edit }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+    @order = Order.find_by_id(order_params[:id])
+    if(@order.update(order_params))
+      # specify what you're going to do if the updated order has "this"
+    else
+      respond_to do |format|
+        format.json {render json: {errors: @order.errors}, status: :unprocessable_entity }
       end
     end
   end
@@ -78,7 +80,9 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    @order.destroy
+    @order.cancel_order
+    
+    @order.update
     respond_to do |format|
       format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
       format.json { head :no_content }
@@ -89,22 +93,15 @@ class OrdersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_order
       @order = Order.find(params[:id])
-      puts "====================================="
-      puts @order
-      puts "====================================="
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def order_params
-      params.require(:order).permit(:order_date, :order_time, :status)
+      params.require(:order).permit(:order_date, :is_paid, :payment_date, :is_delivered,:shipping_address, :shipping_method, :shipping_date, :receipt_number,)
     end
 
     def customer_params
-      params.require(:customer).permit(:id, :customer_name, :customer_address, :shipping_address, :customer_phone)
+      params.require(:customer).permit(:id, :customer_name, :customer_address, :customer_phone)
     end  
 
-
-    def update_customer_params
-      params.require(:customer).permit(:id, :shipping_address, :customer_phone, :status)
-    end  
 end
