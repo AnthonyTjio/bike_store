@@ -11,27 +11,6 @@ Things you may want to cover:
 
 * Configuration
 
-== Database Configuration
-
-This application uses AWS Systems Manager Parameter Store for database configuration.
-
-To set up the parameters:
-
-1. Configure AWS credentials (IAM role, environment variables, or AWS CLI)
-2. Run: rake parameter_store:setup_database
-3. Customize parameters in AWS Console or via AWS CLI
-
-Parameters are stored under paths like:
-/bikestore/production/database/adapter
-/bikestore/production/database/host
-/bikestore/production/database/username
-/bikestore/production/database/password
-
-Available rake tasks:
-- rake parameter_store:setup_database  # Initial setup
-- rake parameter_store:list_database   # List current parameters  
-- rake parameter_store:test_connection # Test database connection
-
 * Database creation
 
 * Database initialization

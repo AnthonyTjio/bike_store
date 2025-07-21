@@ -1,27 +1,25 @@
-# Database configuration now loaded from AWS Systems Manager Parameter Store
-# 
-# Parameters are expected to be stored under the following paths:
-# /bikestore/development/database/adapter
-# /bikestore/development/database/database
-# /bikestore/development/database/pool
-# /bikestore/development/database/timeout
-# 
-# /bikestore/test/database/adapter
-# /bikestore/test/database/database
-# /bikestore/test/database/pool
-# /bikestore/test/database/timeout
-# 
-# /bikestore/production/database/adapter
-# /bikestore/production/database/database
-# /bikestore/production/database/pool
-# /bikestore/production/database/timeout
-# /bikestore/production/database/host
-# /bikestore/production/database/username
-# /bikestore/production/database/password
+# SQLite version 3.x
+#   gem install sqlite3
 #
-# For PostgreSQL/MySQL, additional parameters like host, username, password can be added
+#   Ensure the SQLite 3 gem is defined in your Gemfile
+#   gem 'sqlite3'
+#
+default: &default
+  adapter: sqlite3
+  pool: 5
+  timeout: 5000
 
-<%= 
-  require_relative 'database'
-  DatabaseConfig.load_config.to_yaml.sub(/^---\n/, '')
-%>
+development:
+  <<: *default
+  database: db/development.sqlite3
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: db/test.sqlite3
+
+production:
+  <<: *default
+  database: db/production.sqlite3
